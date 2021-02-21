@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1007022505444",
+    "firebase_url": "https://dexter-711df.firebaseio.com",
+    "project_id": "dexter-711df",
+    "storage_bucket": "dexter-711df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007022505444:android:2d09fae19538838c1adbf1",
+        "android_client_info": {
+          "package_name": "com.example.tik_tok_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1007022505444-mf7v52hdvovhb2ss259ctlk5ehjq01u4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDstoym7jpa-K9Yx4J70VvgC8zt-MwetH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1007022505444-mf7v52hdvovhb2ss259ctlk5ehjq01u4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

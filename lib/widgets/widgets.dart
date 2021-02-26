@@ -21,14 +21,14 @@ Widget buildLogoWidget(BuildContext context) {
       style: TextStyle(fontSize: 28),
       children: <TextSpan>[
         TextSpan(
-          text: 'News',
+          text: 'news',
           style: TextStyle(
             fontWeight: FontWeight.w900,
-            color: Color(0xffFF375E),
+            color: Colors.red,
           ),
         ),
         TextSpan(
-          text: 'App',
+          text: 'app',
           style: TextStyle(
             fontWeight: FontWeight.w900,
             color: Colors.black,

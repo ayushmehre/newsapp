@@ -1,3 +1,5 @@
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,90 +20,163 @@ class _MainPageState extends State<MainPage> {
   final CollectionReference _newsRef =
       FirebaseFirestore.instance.collection('news');
 
-  Widget newsList() {
-    int _selectedPage;
-    return Container(
-      margin: EdgeInsets.only(top: 10, bottom: 10),
-      child: FutureBuilder<QuerySnapshot>(
-        future: _newsRef.get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            );
-          }
+  AudioPlayer _player;
+  AudioCache cache;
 
-          if (snapshot.connectionState == ConnectionState.done) {
-            // display data in listview User
-            return CarouselSlider(
-              options: CarouselOptions(
-                height: 700,
-                viewportFraction: 1,
-                initialPage: 0,
-                enableInfiniteScroll: false,
-                reverse: false,
-                autoPlay: false,
-                autoPlayInterval: Duration(seconds: 3),
-                autoPlayAnimationDuration: Duration(milliseconds: 800),
-                enlargeCenterPage: true,
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index, reason) => {
-                  _selectedPage = index,
-                },
-              ),
-              items: snapshot.data.docs.map((document) {
-                return UI(
-                  newsId: document.id,
-                  userId: document.data()['userId'],
-                  author: document.data()['author'],
-                  audioUrl: document.data()['audioUrl'],
-                  content: document.data()['content'],
-                  postedAt: document.data()['postedAt'],
-                  sourceURL: document.data()['sourceURL'],
-                  title: document.data()['title'],
-                );
-              }).toList(),
-            );
-          }
+  Duration position = new Duration();
+  Duration musicLength = new Duration();
 
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        },
-      ),
-    );
+  void seekToSec(int sec) {
+    Duration newPos = Duration(seconds: sec);
+    _player.seek(newPos);
   }
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   fetchArticlesFromFirebase();
+  // Widget newsList() {
+  //   int _selectedPage;
+  //   return Container(
+  //     margin: EdgeInsets.only(top: 10, bottom: 10),
+  //     child: FutureBuilder<QuerySnapshot>(
+  //       future: _newsRef.get(),
+  //       builder: (context, snapshot) {
+  //         if (snapshot.hasError) {
+  //           return Scaffold(
+  //             body: Center(
+  //               child: Text('Error: ${snapshot.error}'),
+  //             ),
+  //           );
+  //         }
+  //
+  //         if (snapshot.connectionState == ConnectionState.done) {
+  //           // display data in listview User
+  //           return CarouselSlider(
+  //             options: CarouselOptions(
+  //               height: 700,
+  //               viewportFraction: 1,
+  //               initialPage: 0,
+  //               enableInfiniteScroll: false,
+  //               reverse: false,
+  //               autoPlay: false,
+  //               autoPlayInterval: Duration(seconds: 3),
+  //               autoPlayAnimationDuration: Duration(milliseconds: 800),
+  //               enlargeCenterPage: true,
+  //               scrollDirection: Axis.vertical,
+  //               onPageChanged: (index, reason) => {
+  //                 _selectedPage = index,
+  //               },
+  //             ),
+  //             items: snapshot.data.docs.map((document) {
+  //               return NewsStoryWidget(
+  //                 newsId: document.id,
+  //                 userId: document.data()['userId'],
+  //                 author: document.data()['author'],
+  //                 audioUrl: document.data()['audioUrl'],
+  //                 content: document.data()['content'],
+  //                 postedAt: document.data()['postedAt'],
+  //                 sourceURL: document.data()['sourceURL'],
+  //                 title: document.data()['title'],
+  //               );
+  //             }).toList(),
+  //           );
+  //         }
+  //
+  //         return Scaffold(
+  //           body: Center(
+  //             child: CircularProgressIndicator(),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
   // }
 
-  // fetchArticlesFromFirebase() async {
-  //   QuerySnapshot results = await _newsRef.get();
-  //   List<DocumentSnapshot> articles = results.docs;
-  //   setState(() {
-  //     this.articles = articles;
-  //   });
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchArticlesFromFirebase();
+
+    _player = AudioPlayer();
+    cache = AudioCache(fixedPlayer: _player);
+
+    _player.durationHandler = (d) {
+      setState(() {
+        musicLength = d;
+      });
+    };
+
+    _player.positionHandler = (d) {
+      setState(() {
+        musicLength = d;
+      });
+    };
+  }
+
+  void playAudioForIndex(int index) async {
+    await _player.stop();
+    var data = articles[index].data();
+    var url = data['audioUrl'];
+    await _player.play(url);
+  }
+
+  fetchArticlesFromFirebase() async {
+    QuerySnapshot results = await _newsRef.get();
+    List<DocumentSnapshot> articles = results.docs;
+    setState(() {
+      this.articles = articles;
+    });
+    playAudioForIndex(0);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff9f9f9),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: buildLogoWidget(context),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: newsList(),
+      body: articles == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : buildCarousel(),
+    );
+  }
+
+  Widget buildCarousel() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 700,
+        viewportFraction: 1,
+        initialPage: 0,
+        enableInfiniteScroll: false,
+        reverse: false,
+        autoPlay: false,
+        autoPlayInterval: Duration(seconds: 3),
+        autoPlayAnimationDuration: Duration(milliseconds: 800),
+        enlargeCenterPage: true,
+        scrollDirection: Axis.vertical,
+        onPageChanged: (index, reason) => {
+          //_selectedPage = index,
+          playAudioForIndex(index)
+        },
+      ),
+      items: articles.map((document) {
+        var data = document.data();
+        return NewsStoryWidget(
+          newsId: document.id,
+          userId: data['userId'],
+          author: data['author'],
+          audioUrl: data['audioUrl'],
+          content: data['content'],
+          postedAt: data['postedAt'],
+          sourceURL: data['sourceURL'],
+          title: data['title'],
+          images:data['images']
+        );
+      }).toList(),
     );
   }
 }

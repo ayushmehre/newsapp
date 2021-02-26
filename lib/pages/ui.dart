@@ -1,10 +1,11 @@
 import 'package:audioplayers/audio_cache.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 
-class UI extends StatefulWidget with WidgetsBindingObserver {
+class NewsStoryWidget extends StatefulWidget with WidgetsBindingObserver {
   final String title,
       sourceURL,
       audioUrl,
@@ -13,9 +14,13 @@ class UI extends StatefulWidget with WidgetsBindingObserver {
       author,
       newsId,
       userId;
+
+  final List<dynamic> images;
+
   @override
-  _UIState createState() => _UIState();
-  UI({
+  _NewsStoryWidgetState createState() => _NewsStoryWidgetState();
+
+  NewsStoryWidget({
     this.author,
     this.content,
     this.postedAt,
@@ -24,11 +29,14 @@ class UI extends StatefulWidget with WidgetsBindingObserver {
     this.newsId,
     this.userId,
     this.audioUrl,
+    this.images,
   });
 }
 
-class _UIState extends State<UI> with TickerProviderStateMixin {
+class _NewsStoryWidgetState extends State<NewsStoryWidget>
+    with TickerProviderStateMixin {
   bool playing = true;
+
   // IconData playBtn = Icons.play_arrow;
 
   AudioPlayer _player;
@@ -61,12 +69,17 @@ class _UIState extends State<UI> with TickerProviderStateMixin {
       });
     };
 
-    _player.play(widget.audioUrl);
+    // _player.play(widget.audioUrl);
     // _player.stop();
   }
 
   @override
   Widget build(BuildContext context) {
+    String src = widget.images.length>0?widget.images[0]:'';
+    if(src.isNotEmpty && !src.startsWith('http')){
+      src = 'https://$src';
+    }
+    print('src: $src');
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(
@@ -87,9 +100,9 @@ class _UIState extends State<UI> with TickerProviderStateMixin {
                     child: Text(
                       '${widget.title}',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 30,
                         color: Colors.black,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                   ),
@@ -100,15 +113,15 @@ class _UIState extends State<UI> with TickerProviderStateMixin {
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           border: Border(
-                            top: BorderSide(color: Color(0xffFF375E), width: 5),
-                            bottom:
-                                BorderSide(color: Color(0xffFF375E), width: 5),
-                          ),
+                              // top: BorderSide(color: Color(0xffFF375E), width: 5),
+                              // bottom:
+                              //     BorderSide(color: Color(0xffFF375E), width: 5),
+                              ),
                         ),
-                        child: Image.network(
-                          "https://blog.tubikstudio.com/wp-content/uploads/2018/04/perfect-recipes-app-ui-design-tubik.png",
+                        child: getImageCarrousel()/*Image.network(
+                          src,
                           fit: BoxFit.cover,
-                        ),
+                        )*/,
                       ),
                     ],
                   ),
@@ -132,7 +145,7 @@ class _UIState extends State<UI> with TickerProviderStateMixin {
                               onTap: () =>
                                   _launchURL(context, widget.sourceURL),
                               child: Text(
-                                'Read more at: www.cricbuzz.com',
+                                'Read more at: ${widget.sourceURL}',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.black87,
@@ -152,14 +165,11 @@ class _UIState extends State<UI> with TickerProviderStateMixin {
                     ),
                     Column(
                       children: [
-                        Icon(
-                          Icons.whatshot_sharp,
-                          color: Colors.green,
-                          size: 24,
+                        Image.asset('assets/whatsapp.png', height: 30, width: 30,
                         ),
                         SizedBox(height: 8),
                         Text(
-                          '42 Shares',
+                          'No Shares',
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.black38,
@@ -199,5 +209,34 @@ class _UIState extends State<UI> with TickerProviderStateMixin {
       // An exception is thrown if browser app is not installed on Android device.
       debugPrint(e.toString());
     }
+  }
+
+  Widget getImageCarrousel() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 700,
+        viewportFraction: 1,
+        initialPage: 0,
+        enableInfiniteScroll: true,
+        reverse: false,
+        autoPlay: true,
+        autoPlayInterval: Duration(seconds: 2),
+        autoPlayAnimationDuration: Duration(milliseconds: 800),
+        enlargeCenterPage: true,
+        scrollDirection: Axis.horizontal,
+        onPageChanged: (index, reason) => {
+          //_selectedPage = index,
+          //playAudioForIndex(index)
+        },
+      ),
+      items: widget.images.map((image) {
+        String src = image;
+        if(src.isNotEmpty && !src.startsWith('http')){
+          src = 'https://$src';
+        }
+        return Image.network(src, fit: BoxFit.cover,);
+
+      }).toList(),
+    );
   }
 }

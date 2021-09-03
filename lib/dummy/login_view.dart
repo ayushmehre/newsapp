@@ -11,6 +11,9 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage2 extends StatefulWidget {
+
+  LoginPage2();
+
   @override
   _LoginPage2State createState() => _LoginPage2State();
 }

@@ -23,6 +23,35 @@ Future<Uint8List> _readFileByte(File filePath) async {
   return Uint8List.view(bytes.buffer);
 }
 
+getUserByEmailGetRequest(String email, callback) async {
+  var GET_USER_BY_Email_URL =
+      "https://akugo8ysj8.execute-api.ap-south-1.amazonaws.com/dev/GetUserByEmail?email=$email";
+
+  Uri user_email_uri = Uri.parse(GET_USER_BY_Email_URL);
+  try {
+    http.Response response = await http.get(user_email_uri);
+    print('\n\n ${jsonDecode(response.body)} \n\n');
+    callback("success", jsonDecode(response.body));
+  } catch (e) {
+    print('\n\n Error: $e \n\n');
+    callback(null);
+  }
+}
+
+getUserByIdGetRequest(String userid, callback) async {
+  var GET_USER_BY_ID_URL =
+      "https://akugo8ysj8.execute-api.ap-south-1.amazonaws.com/dev/GetUserById?user_id=$userid";
+
+  Uri user_uri = Uri.parse(GET_USER_BY_ID_URL);
+  try {
+    http.Response response = await http.get(user_uri);
+    print('\n\n ${jsonDecode(response.body)} \n\n');
+    callback("success", jsonDecode(response.body));
+  } catch (e) {
+    callback(null);
+  }
+}
+
 signupUserPostRequest(
     {required String email,
     required String token,
@@ -40,11 +69,9 @@ signupUserPostRequest(
   };
 
   try {
-    http.Response response = await http.post(
-      signup_user_uri,
-      body: json.encode(bodyobj),
-      headers: {"Content-Type": "application/json"}
-    );
+    http.Response response = await http.post(signup_user_uri,
+        body: json.encode(bodyobj),
+        headers: {"Content-Type": "application/json"});
     print('\n\n ${jsonDecode(response.body)} \n\n');
     callback("Success", jsonDecode(response.body));
   } catch (e) {

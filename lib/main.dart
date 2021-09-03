@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:qrious_createrapp/pages/HomePage.dart';
 import 'package:qrious_createrapp/pages/LoginPage.dart';
 import 'package:qrious_createrapp/tabs/bottom_nav.dart';
+import 'package:qrious_createrapp/utils/api.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
 
 import 'amplifyconfiguration.dart';
@@ -38,8 +39,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    // openLogin();
     getCurrentUser();
-    openLogin();
     super.initState();
   }
 
@@ -47,21 +48,56 @@ class _SplashScreenState extends State<SplashScreen> {
     await Amplify.addPlugin(AmplifyAuthCognito());
     await Amplify.configure(amplifyconfig);
     try {
-      final awsUser = await Amplify.Auth.getCurrentUser();
-      print("\n\n \n\n awsUser: ${awsUser.userId}");
-      if (awsUser.userId != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNav(),
-          ),
-        );
-      }
+      Amplify.Auth.fetchUserAttributes().then((currentUser)async {
+        print(currentUser);
+        for (var i = 0; i < currentUser.length; i++) {
+          if (currentUser[i].userAttributeKey == 'email') {
+            final email = currentUser[i].value;
+            await getUserByEmailGetRequest(email, (code, response) {
+              // print(currentUser);
+              if (code != null) {
+                print('aaaa $email $code $response');
+                // if (currentUser.userId != null) {}
+                if(mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BottomNav(),
+                    ),
+                  );
+                }
+              } else {
+                openLogin();
+              }
+            });
+          }else{
+            openLogin();
+          }
+        }
+        if(currentUser.length==0){
+          openLogin();
+        }
+      }).catchError((onError){
+        print("*********");
+        openLogin();
+      });
+      // openLogin();
+
+
+      // print("\n\n \n\n awsUser: ${awsUser.userId}");
+      // if (awsUser.userId != null) {
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => BottomNav(),
+      //     ),
+      //   );
+      // }
       //send user to dashboard
-    } on AuthException catch (e) {
-      print('\n\n \n\n Error: $e');
+    } on Exception catch (e) {
+      print('\n\n \n\n ****************: $e');
+      // openLogin();
     }
-    return;
   }
 
   @override
@@ -76,7 +112,13 @@ class _SplashScreenState extends State<SplashScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _title(),
-              Text('Quality Journalism in 30 seconds', style: TextStyle(fontSize: 16, color: white,),)
+              Text(
+                'Quality Journalism in 30 seconds',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: white,
+                ),
+              )
             ],
           ),
         ),
@@ -105,13 +147,15 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void openLogin() {
-    Future.delayed(Duration(seconds: 6), () {
+    // Future.delayed(Duration(seconds: 4), () {
+    if(mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => LoginPage(),
         ),
       );
-    });
+    }
+    // });
   }
 }

@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:http/http.dart' as http;
+import 'package:qrious_createrapp/models/UserObject.dart';
 
 const UPLOAD_VIDEO_URL =
     "https://hpe74fftu9.execute-api.ap-south-1.amazonaws.com/default/VideoUpload";
@@ -23,7 +24,7 @@ Future<Uint8List> _readFileByte(File filePath) async {
   return Uint8List.view(bytes.buffer);
 }
 
-getUserByEmailGetRequest(String email, callback) async {
+Future<UserObject?> getUserByEmail(String email) async {
   var GET_USER_BY_Email_URL =
       "https://akugo8ysj8.execute-api.ap-south-1.amazonaws.com/dev/GetUserByEmail?email=$email";
 
@@ -31,10 +32,10 @@ getUserByEmailGetRequest(String email, callback) async {
   try {
     http.Response response = await http.get(user_email_uri);
     print('\n\n ${jsonDecode(response.body)} \n\n');
-    callback("success", jsonDecode(response.body));
+    return UserObject.fromJson(jsonDecode(response.body));
   } catch (e) {
     print('\n\n Error: $e \n\n');
-    callback(null);
+    return null;
   }
 }
 

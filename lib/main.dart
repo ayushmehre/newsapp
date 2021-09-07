@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:qrious_createrapp/models/UserObject.dart';
 import 'package:qrious_createrapp/pages/HomePage.dart';
 import 'package:qrious_createrapp/pages/LoginPage.dart';
 import 'package:qrious_createrapp/tabs/bottom_nav.dart';
@@ -46,39 +47,25 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   getCurrentUser() async {
-    // initializing amplify
+    //Initializing Amplify
     await Amplify.addPlugin(AmplifyAuthCognito());
     await Amplify.configure(amplifyconfig);
 
-    try {
+    //Checking if user is logged in or not
+    var authSession = await Amplify.Auth.fetchAuthSession();
+
+    if (authSession.isSignedIn) {
+      var user = await Amplify.Auth.getCurrentUser();
       var userAttributes = await Amplify.Auth.fetchUserAttributes();
-      for (var i = 0; i < userAttributes.length; i++) {
-        if (userAttributes[i].userAttributeKey == 'email') {
-          final email = userAttributes[i].value;
-          await getUserByEmailGetRequest(email, (code, response) {
-            if (code != null) {
-              if (mounted) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottomNav(),
-                  ),
-                );
-              }
-            } else {
-              openLogin();
-            }
-          });
-        } else {
-          openLogin();
-        }
-      }
-      if (userAttributes.length == 0) {
+      String email = findEmailAttribute(userAttributes);
+      var exists = await checkIfUserExists(email);
+      if (exists) {
+        navigateToHomeScreen();
+      } else {
         openLogin();
       }
-      //send user to dashboard
-    } on Exception catch (e) {
-      print('\n\n \n\n ****************: $e');
+    } else {
+      openLogin();
     }
   }
 
@@ -113,5 +100,35 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
     // });
+  }
+
+  String findEmailAttribute(List<AuthUserAttribute> userAttributes) {
+    String email = '';
+
+    for (AuthUserAttribute attribute in userAttributes) {
+      if (attribute.userAttributeKey == 'email') {
+        email = attribute.value;
+      }
+    }
+
+    return email;
+  }
+
+  Future<bool> checkIfUserExists(String email) async {
+    UserObject? user = await getUserByEmail(email);
+    if (user != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void navigateToHomeScreen() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(),
+      ),
+    );
   }
 }

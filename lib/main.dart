@@ -9,6 +9,7 @@ import 'package:qrious_createrapp/pages/LoginPage.dart';
 import 'package:qrious_createrapp/tabs/bottom_nav.dart';
 import 'package:qrious_createrapp/utils/api.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
+import 'package:qrious_createrapp/widgets/widgets.dart';
 
 import 'amplifyconfiguration.dart';
 
@@ -45,58 +46,39 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   getCurrentUser() async {
+    // initializing amplify
     await Amplify.addPlugin(AmplifyAuthCognito());
     await Amplify.configure(amplifyconfig);
+
     try {
-      Amplify.Auth.fetchUserAttributes().then((currentUser)async {
-        print(currentUser);
-        for (var i = 0; i < currentUser.length; i++) {
-          if (currentUser[i].userAttributeKey == 'email') {
-            final email = currentUser[i].value;
-            await getUserByEmailGetRequest(email, (code, response) {
-              // print(currentUser);
-              if (code != null) {
-                print('aaaa $email $code $response');
-                // if (currentUser.userId != null) {}
-                if(mounted) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BottomNav(),
-                    ),
-                  );
-                }
-              } else {
-                openLogin();
+      var userAttributes = await Amplify.Auth.fetchUserAttributes();
+      for (var i = 0; i < userAttributes.length; i++) {
+        if (userAttributes[i].userAttributeKey == 'email') {
+          final email = userAttributes[i].value;
+          await getUserByEmailGetRequest(email, (code, response) {
+            if (code != null) {
+              if (mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BottomNav(),
+                  ),
+                );
               }
-            });
-          }else{
-            openLogin();
-          }
-        }
-        if(currentUser.length==0){
+            } else {
+              openLogin();
+            }
+          });
+        } else {
           openLogin();
         }
-      }).catchError((onError){
-        print("*********");
+      }
+      if (userAttributes.length == 0) {
         openLogin();
-      });
-      // openLogin();
-
-
-      // print("\n\n \n\n awsUser: ${awsUser.userId}");
-      // if (awsUser.userId != null) {
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => BottomNav(),
-      //     ),
-      //   );
-      // }
+      }
       //send user to dashboard
     } on Exception catch (e) {
       print('\n\n \n\n ****************: $e');
-      // openLogin();
     }
   }
 
@@ -111,14 +93,8 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _title(),
-              Text(
-                'Quality Journalism in 30 seconds',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: white,
-                ),
-              )
+              titleWidget(60, "Pocket", "Daily", white),
+              // subTitleWidget('Quality Journalism in 30 seconds', 22, white),
             ],
           ),
         ),
@@ -126,29 +102,9 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        text: 'Pocket',
-        style: GoogleFonts.portLligatSans(
-          fontSize: 60,
-          fontWeight: FontWeight.w700,
-          color: white,
-        ),
-        children: [
-          TextSpan(
-            text: 'Daily',
-            style: TextStyle(color: black, fontSize: 60),
-          ),
-        ],
-      ),
-    );
-  }
-
   void openLogin() {
     // Future.delayed(Duration(seconds: 4), () {
-    if(mounted) {
+    if (mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

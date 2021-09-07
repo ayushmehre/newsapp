@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:qrious_createrapp/pages/InputNameScreen.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
 import 'package:qrious_createrapp/widgets/customSignInButton.dart';
+import 'package:qrious_createrapp/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -67,29 +68,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        text: 'Pocket',
-        style: GoogleFonts.roboto(
-          fontSize: 60,
-          fontWeight: FontWeight.w900,
-          color: red,
-        ),
-        children: [
-          TextSpan(
-              text: 'Daily',
-              style: GoogleFonts.roboto(
-                fontSize: 60,
-                fontWeight: FontWeight.w900,
-                color: Colors.black,
-              )),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +89,14 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [_title(), buildSubtitle()],
+                      children: [
+                        titleWidget(60, "Pocket", "Daily", red),
+                        subTitleWidget(
+                          'Quality Journalism in 30 seconds',
+                          18,
+                          Colors.black54,
+                        ),
+                      ],
                     ),
                   ),
                   Spacer(),
@@ -119,16 +104,6 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-    );
-  }
-
-  Text buildSubtitle() {
-    return Text(
-      'Quality Journalism in 60 seconds',
-      style: TextStyle(
-        fontSize: 22,
-        color: Colors.black54,
-      ),
     );
   }
 }

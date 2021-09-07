@@ -23,7 +23,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               style: GoogleFonts.roboto(
                 textStyle: TextStyle(
                   fontSize: 44,
-                  color: black,
+                  color: CustomColors().black,
                   fontWeight: FontWeight.w700,
                 ),
               ),

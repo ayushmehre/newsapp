@@ -43,7 +43,7 @@ class _UserAccountState extends State<UserAccount> {
                 style: GoogleFonts.roboto(
                   textStyle: TextStyle(
                     fontSize: 44,
-                    color: black,
+                    color: CustomColors().black,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -58,7 +58,7 @@ class _UserAccountState extends State<UserAccount> {
                   'Personal Profile',
                   style: TextStyle(
                     fontSize: 18,
-                    color: black,
+                    color: CustomColors().black,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -75,7 +75,7 @@ class _UserAccountState extends State<UserAccount> {
                   'Settings',
                   style: TextStyle(
                     fontSize: 18,
-                    color: black,
+                    color: CustomColors().black,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -92,7 +92,7 @@ class _UserAccountState extends State<UserAccount> {
                   'Contact Us',
                   style: TextStyle(
                     fontSize: 18,
-                    color: black,
+                    color: CustomColors().black,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -111,7 +111,7 @@ class _UserAccountState extends State<UserAccount> {
                   'Logout',
                   style: TextStyle(
                     fontSize: 18,
-                    color: black,
+                    color: CustomColors().black,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

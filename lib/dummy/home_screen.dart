@@ -62,14 +62,14 @@ class _HomeScreen2State extends State<HomeScreen2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: white,
-        title: Text('All Videos', style: TextStyle(color: black)),
+        backgroundColor: CustomColors().white,
+        title: Text('All Videos', style: TextStyle(color: CustomColors().black)),
         actions: [
           MaterialButton(
             onPressed: () {
               handleLogout();
             },
-            child: Icon(Icons.logout, color: black, size: 20),
+            child: Icon(Icons.logout, color: CustomColors().black, size: 20),
           ),
         ],
       ),
@@ -112,7 +112,7 @@ Container listComponent({
     margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
     padding: EdgeInsets.fromLTRB(6, 6, 6, 6),
     decoration: BoxDecoration(
-      color: white,
+      color: CustomColors().white,
       borderRadius: BorderRadius.circular(4),
       boxShadow: [
         BoxShadow(
@@ -149,7 +149,7 @@ Container listComponent({
                   title!,
                   style: TextStyle(
                     fontSize: 12,
-                    color: black,
+                    color: CustomColors().black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -159,7 +159,7 @@ Container listComponent({
                 'Views: $views',
                 style: TextStyle(
                   fontSize: 11,
-                  color: grey,
+                  color: CustomColors().grey,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -167,7 +167,7 @@ Container listComponent({
                 'Likes: $likes',
                 style: TextStyle(
                   fontSize: 11,
-                  color: grey,
+                  color: CustomColors().grey,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -175,7 +175,7 @@ Container listComponent({
                 'Comments: $comments',
                 style: TextStyle(
                   fontSize: 11,
-                  color: grey,
+                  color: CustomColors().grey,
                   fontWeight: FontWeight.w400,
                 ),
               ),

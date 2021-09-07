@@ -36,7 +36,7 @@ class _SingleFeedState extends State<SingleFeed> {
                 StoryItem.text(
                   title:
                       "I guess you'd love to see more of our food. That's great.",
-                  backgroundColor: black,
+                  backgroundColor: CustomColors().black,
                 ),
                 StoryItem.text(
                   title: "Nice!\n\nTap to continue.",
@@ -84,12 +84,12 @@ class _SingleFeedState extends State<SingleFeed> {
           ),
           Container(
             height: 50,
-            color: black,
+            color: CustomColors().black,
             child: Row(
               children: [
                 Container(
                   width: width / 5,
-                  child: Icon(Icons.thumb_up, color: white),
+                  child: Icon(Icons.thumb_up, color: CustomColors().white),
                 ),
                 InkWell(
                   onTap: () {
@@ -108,20 +108,20 @@ class _SingleFeedState extends State<SingleFeed> {
                   },
                   child: Container(
                     width: width / 5,
-                    child: Icon(Icons.chat, color: white),
+                    child: Icon(Icons.chat, color: CustomColors().white),
                   ),
                 ),
                 Container(
                   width: width / 5,
-                  child: Icon(Icons.share, color: white),
+                  child: Icon(Icons.share, color: CustomColors().white),
                 ),
                 Container(
                   width: width / 5,
-                  child: Icon(FontAwesomeIcons.whatsapp, color: white),
+                  child: Icon(FontAwesomeIcons.whatsapp, color: CustomColors().white),
                 ),
                 Container(
                   width: width / 5,
-                  child: Icon(Icons.more_vert, color: white),
+                  child: Icon(Icons.more_vert, color: CustomColors().white),
                 ),
               ],
             ),

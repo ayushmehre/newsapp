@@ -41,7 +41,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // openLogin();
     getCurrentUser();
     super.initState();
   }
@@ -72,34 +71,21 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: red,
+      backgroundColor: CustomColors().red,
       body: Container(
-        color: red,
+        color: CustomColors().red,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              titleWidget(60, "Pocket", "Daily", white),
+              getTitleWidget(60, "Pocket", "Daily", CustomColors().white),
               // subTitleWidget('Quality Journalism in 30 seconds', 22, white),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void openLogin() {
-    // Future.delayed(Duration(seconds: 4), () {
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginPage(),
-        ),
-      );
-    }
-    // });
   }
 
   String findEmailAttribute(List<AuthUserAttribute> userAttributes) {
@@ -115,7 +101,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<bool> checkIfUserExists(String email) async {
-    UserObject? user = await getUserByEmail(email);
+    UserObject? user = await API().getUserByEmail(email);
     if (user != null) {
       return true;
     } else {
@@ -124,11 +110,28 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigateToHomeScreen() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(),
-      ),
-    );
+    Future.delayed(Duration(seconds: 4), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BottomNav(),
+          ),
+        );
+      }
+    });
+  }
+
+  void openLogin() {
+    Future.delayed(Duration(seconds: 4), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ),
+        );
+      }
+    });
   }
 }

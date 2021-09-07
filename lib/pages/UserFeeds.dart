@@ -23,7 +23,7 @@ class _UserFeedsState extends State<UserFeeds> {
               style: GoogleFonts.roboto(
                 textStyle: TextStyle(
                   fontSize: 44,
-                  color: black,
+                  color: CustomColors().black,
                   fontWeight: FontWeight.w700,
                 ),
               ),

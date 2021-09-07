@@ -51,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: CustomColors().white,
       appBar: AppBar(
         toolbarHeight: 4,
-        backgroundColor: white,
+        backgroundColor: CustomColors().white,
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: GoogleFonts.roboto(
                   textStyle: TextStyle(
                     fontSize: 44,
-                    color: black,
+                    color: CustomColors().black,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -130,7 +130,7 @@ Column listComponent({
                   index!,
                   style: TextStyle(
                     fontSize: 65,
-                    color: black,
+                    color: CustomColors().black,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -162,7 +162,7 @@ Column listComponent({
                               style: GoogleFonts.roboto(
                                 textStyle: TextStyle(
                                   fontSize: 26,
-                                  color: black,
+                                  color: CustomColors().black,
                                   fontWeight: FontWeight.w900,
                                 ),
                               ),
@@ -175,7 +175,7 @@ Column listComponent({
                             style: GoogleFonts.abel(
                               textStyle: TextStyle(
                                 fontSize: 16,
-                                color: black,
+                                color: CustomColors().black,
                                 fontWeight: FontWeight.w400,
                                 height: 1.1,
                               ),
@@ -193,9 +193,9 @@ Column listComponent({
       ),
       Container(
         decoration: BoxDecoration(
-          color: white,
+          color: CustomColors().white,
           border: Border(
-            bottom: BorderSide(color: bordercolor, width: 1),
+            bottom: BorderSide(color: CustomColors().bordercolor, width: 1),
           ),
         ),
       )

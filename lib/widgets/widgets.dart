@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
 
-Widget titleWidget(double fs, String text1, String text2, Color color) {
+Widget getTitleWidget(double fs, String text1, String text2, Color? color) {
   return RichText(
     textAlign: TextAlign.center,
     text: TextSpan(
@@ -10,7 +11,7 @@ Widget titleWidget(double fs, String text1, String text2, Color color) {
       style: GoogleFonts.roboto(
         fontSize: fs,
         fontWeight: FontWeight.w900,
-        color: color,
+        color: color ?? Colors.red[600],
       ),
       children: [
         TextSpan(
@@ -18,7 +19,7 @@ Widget titleWidget(double fs, String text1, String text2, Color color) {
           style: GoogleFonts.roboto(
             fontSize: fs,
             fontWeight: FontWeight.w900,
-            color: black,
+            color: CustomColors().black,
           ),
         ),
       ],

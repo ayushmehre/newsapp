@@ -106,7 +106,7 @@ class BottomTabBtn extends StatelessWidget {
             ),
           ),
         ),
-        child: Icon(imagePath, size: 30, color: black),
+        child: Icon(imagePath, size: 30, color: CustomColors().black),
         // child: Image(
         //   image: AssetImage(imagePath),
         //   width: 26,

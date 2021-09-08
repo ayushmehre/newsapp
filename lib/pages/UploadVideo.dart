@@ -329,7 +329,7 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
         padding: EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.red[600],
+          color: CustomColors().red,
           borderRadius: BorderRadius.all(Radius.circular(5)),
           boxShadow: <BoxShadow>[
             BoxShadow(

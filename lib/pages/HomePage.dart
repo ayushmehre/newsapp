@@ -6,12 +6,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:qrious_createrapp/dummy/add_video_player.dart';
-import 'package:qrious_createrapp/pages/AddVideo.dart';
+import 'package:qrious_createrapp/pages/UploadVideo.dart';
+import 'package:qrious_createrapp/dummy/AddVideo.dart';
 import 'package:qrious_createrapp/pages/LoginPage.dart';
-import 'package:qrious_createrapp/pages/SingleFeed.dart';
+import 'package:qrious_createrapp/pages/VideoStoriesFeed.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
+import 'package:qrious_createrapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_video_info/flutter_video_info.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,16 +24,35 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late VideoPlayerController _controller;
+  final videoInfo = FlutterVideoInfo();
   late File _file;
   final selected = ImagePicker();
 
   Future getImage() async {
     final selectedImage = await selected.pickVideo(source: ImageSource.gallery);
+    var a = await videoInfo.getVideoInfo(selectedImage!.path);
 
     setState(() {
       if (selectedImage != null) {
         _file = File(selectedImage.path);
         VideoPlayerController.file(File(selectedImage.path));
+
+        var endDuration = (a!.duration)!/1000 <= 60;
+        var startDuration = (a.duration)!/1000 >= 10;
+        var filelength = (_file.lengthSync() / 1024 / 1024) <= 50;
+        if(!startDuration) {
+          showErrorDialog(context, "Error", "Please select file greater then 10 seconds");
+          return;
+        }
+        if(!endDuration) {
+          showErrorDialog(context, "Error", "Please select file less then 60 seconds");
+          return;
+        }
+        if(!filelength) {
+          showErrorDialog(context, "Error", "File size should not be greater then 50MB");
+          return;
+        }
+
         print('\n\n \n\n \n\n \n\n');
         print(_file);
         print('\n\n \n\n \n\n \n\n');
@@ -114,7 +135,7 @@ Column listComponent({
         onTap: () {
           Navigator.push(
             context!,
-            MaterialPageRoute(builder: (context) => SingleFeed()),
+            MaterialPageRoute(builder: (context) => VideoStoriesFeed()),
           );
         },
         child: Container(

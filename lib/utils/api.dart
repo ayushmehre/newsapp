@@ -20,7 +20,8 @@ class API {
   static final BASE_URL_DEFAULT =
       "https://akugo8ysj8.execute-api.ap-south-1.amazonaws.com/default";
 
-  static final UPLOAD_VIDEO_URL = "$BASE_URL/VideoUpload";
+  static final UPLOAD_VIDEO_URL =
+      "https://hpe74fftu9.execute-api.ap-south-1.amazonaws.com/default/VideoUpload";
 
   static final SIGNUP_USER_URL = "$BASE_URL/CreateNewUser";
 
@@ -61,11 +62,12 @@ class API {
     }
   }
 
-  signupUserPostRequest(
-      {required String email,
-      required String token,
-      required String name,
-      required Function callback}) async {
+  signupUserPostRequest({
+    required String email,
+    required String token,
+    required String name,
+    required Function callback,
+  }) async {
     print('\n\n Signup User Post Request Called ==> $email $name $token \n\n');
 
     var bodyobj = {
@@ -90,7 +92,7 @@ class API {
     }
   }
 
-  uploadVideoPostRequest(file) async {
+  Future uploadVideoPostRequest(file) async {
     try {
       http.Response response = await http.get(upload_video_uri);
       print('\n\n ${jsonDecode(response.body)} \n\n');
@@ -100,10 +102,12 @@ class API {
       print(
         '\n SignUpUserPostRequest Success >>>> :: $bytes \n ${bytes.runtimeType} \n',
       );
+      print(urlResponse);
       print('\n urlResponse: ${urlResponse["uploadURL"]}');
       print(
         '\n urlResponse type: ${urlResponse["uploadURL"].runtimeType} \n',
       );
+
       Uri upload_video_response_uri = Uri.parse(urlResponse["uploadURL"]);
       http.Response response2 = await http.put(
         upload_video_response_uri,
@@ -111,31 +115,53 @@ class API {
       );
       print('\n Response2 Success >>>> :: ${jsonDecode(response2.body)} \n');
     } catch (e) {
-      print('\n\n \n\n SignUpUserPostRequest Failed >>>> ::');
+      print('\n\n \n\n Response2 Failed >>>> ::');
       print(e);
     }
   }
 
-// Future<String?> fetchUploadUrl() async {
-//   try {
-//     http.Response response = await http.get(upload_video_uri);
-//     var urlResponse = jsonDecode(response.body);
-//
-//   } catch (e) {
-//     print('\n\n \n\n SignUpUserPostRequest Failed >>>> ::');
-//     print(e);
-//   }
-// }
-//
-// uploadVideo(File file, String videoUrl) async {
-//   var bytes = _readFileByte(file);
-//   Uri upload_video_response_uri = Uri.parse(urlResponse["uploadURL"]);
-//   print("\n\n urlResponse type2: ");
-//   http.Response response2 = await http.put(
-//     upload_video_response_uri,
-//     body: await _readFileByte(file),
-//   );
-//   print(
-//       '\n\n Response2 Success >>>> :: ${jsonDecode(response2.body)} \n\n\n');
-// }
+  Future<String?> fetchUploadUrl() async {
+    try {
+      // Fetching UploadUrl
+      http.Response response = await http.get(upload_video_uri);
+      print('\n\n ${jsonDecode(response.body)} \n\n');
+
+      // Upload Url Response
+      var urlResponse = jsonDecode(response.body);
+      print('\n urlResponse: ${urlResponse["uploadURL"]}');
+
+      // Returning Url
+      return urlResponse["uploadURL"];
+    } catch (e) {
+      print('\n\n \n\n fetchUploadUrl Failed >>>> ::');
+      print(e);
+      return null;
+    }
+  }
+
+  uploadVideo(String urlResponse, File file) async {
+    try {
+      // Converting file to Unit8List byte data
+      var bytes = _readFileByte(file);
+      print('\n Bytes Data ::> $bytes $urlResponse \n');
+
+      // Upload video url parse
+      Uri upload_video_response_uri = Uri.parse(urlResponse);
+
+      // Uploading video to server
+      http.Response response = await http.put(
+        upload_video_response_uri,
+        body: await bytes,
+      );
+
+      print('\n uploadVideo Success >>>> :: ${response.statusCode} \n');
+
+      // Returning Response
+      return (response.statusCode);
+    } catch (e) {
+      print('\n\n \n\n uploadVideo Failed >>>> ::');
+      print(e);
+      return null;
+    }
+  }
 }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qrious_createrapp/utils/api.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
+import 'package:qrious_createrapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 class AddVideoPlayer extends StatefulWidget {
@@ -19,8 +20,10 @@ class AddVideoPlayer extends StatefulWidget {
 }
 
 class _AddVideoPlayerState extends State<AddVideoPlayer> {
+  final _formKey = GlobalKey<FormState>();
   late FlickManager flickManager;
   bool isLoading = false;
+  bool tagserror = false;
 
   var tagsList = [];
   String tag = '';
@@ -34,6 +37,7 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
     setState(() {
       tagsList = [];
       isLoading = false;
+      tagserror = false;
     });
   }
 
@@ -44,7 +48,7 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
   }
 
   // Build an alert to show some errors
-  Future<void> _alertDialogBuilder(String title) async {
+  Future<void> addTagsDialogBuilder(String title) async {
     return showDialog(
       context: context,
       barrierDismissible: true,
@@ -70,6 +74,7 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
           actions: [
             MaterialButton(
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 // If tag does not exist then add that tag
                 print("\n\n $tag");
                 if (tag.length != 0 && !(tagsList.contains(tag))) {
@@ -135,15 +140,29 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
         backgroundColor: CustomColors().red,
         title: Text("Post News Video"),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            showVideo(length),
-            // SizedBox(height: 20),
-            _inputFieldsWidget(length: length),
-          ],
-        ),
-      ),
+      body: isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: CustomColors().black),
+                  SizedBox(height: 16),
+                  Text('Uploading...', style: TextStyle(fontSize: 18))
+                ],
+              ),
+            )
+          : SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    showVideo(length),
+                    // SizedBox(height: 20),
+                    _inputFieldsWidget(length: length),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 
@@ -152,8 +171,27 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
       child: Column(
         children: <Widget>[
-          _entryField("Video Title"),
-          _entryField("Video Description", maxlines: 5),
+          _entryField(
+            "Video Title",
+            validator: (val) {
+              if (val!.isEmpty) {
+                return "Video title can\'t be empty";
+              } else {
+                return null;
+              }
+            },
+          ),
+          _entryField(
+            "Video Description",
+            maxlines: 5,
+            validator: (val) {
+              if (val!.isEmpty) {
+                return "Video description can\'t be empty";
+              } else {
+                return null;
+              }
+            },
+          ),
           _addtagField("Tags"),
           _submitButton(length: length),
         ],
@@ -182,8 +220,12 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
     );
   }
 
-  Widget _entryField(String title,
-      {bool isPassword = false, int maxlines = 1}) {
+  Widget _entryField(
+    String title, {
+    bool isPassword = false,
+    int maxlines = 1,
+    String? Function(String?)? validator,
+  }) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -194,10 +236,11 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
           SizedBox(height: 10),
-          TextField(
+          TextFormField(
             maxLines: null,
             minLines: maxlines,
             obscureText: isPassword,
+            validator: validator,
             decoration: InputDecoration(
               hintText: "Enter $title",
               hintStyle: TextStyle(fontSize: 14, color: CustomColors().grey),
@@ -264,7 +307,7 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
           SizedBox(height: 10),
           InkWell(
             onTap: () {
-              _alertDialogBuilder("Enter tag");
+              addTagsDialogBuilder("Enter tag");
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
@@ -287,13 +330,22 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
                     ),
             ),
           ),
-
+          tagserror ? Container(
+            margin: EdgeInsets.only(top: 5),
+            child: Text(
+              "Please select atlease 3 tags",
+              style: TextStyle(fontSize: 12, color: CustomColors().red),
+            ),
+          ) : Container(),
           Container(
             alignment: Alignment.centerRight,
             child: OutlinedButton(
               style: ButtonStyle(alignment: Alignment.centerRight),
               onPressed: () {
-                _alertDialogBuilder("Enter tag");
+                setState(() {
+                  tagserror = false;
+                });
+                addTagsDialogBuilder("Enter tag");
               },
               child: Container(
                 width: 50,
@@ -310,19 +362,39 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
     );
   }
 
+  publishVideoToServer() async {
+    if (_formKey.currentState!.validate()) {
+      if(tagsList.length < 3) {
+        setState(() {
+          tagserror = true;
+        });
+        return;
+      }
+      setState(() {
+        isLoading = true;
+      });
+      var uploadUrl = await API().fetchUploadUrl();
+      print(uploadUrl);
+      if (uploadUrl != null) {
+        var uploadResponseStatusCode =
+            await API().uploadVideo(uploadUrl, widget.file);
+        if (uploadResponseStatusCode == 200) {
+          setState(() {
+            isLoading = false;
+            showErrorDialog(context, "Success", "Your video is uploaded successfully");
+            Navigator.pop(context);
+          });
+        }
+        print(uploadResponseStatusCode.runtimeType);
+      }
+    }
+  }
+
   Widget _submitButton({double? length}) {
     return MaterialButton(
       padding: EdgeInsets.symmetric(horizontal: 0),
       onPressed: () async {
-        setState(() {
-          isLoading = true;
-        });
-        var uploadVideoResponse = await API().uploadVideoPostRequest(widget.file);
-        if(uploadVideoResponse == null) {
-          setState(() {
-            isLoading = false;
-          });
-        }
+        await publishVideoToServer();
       },
       child: Container(
         width: length,

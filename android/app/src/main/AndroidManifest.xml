@@ -9,7 +9,8 @@
    <application
         android:label="qrious_createrapp"
         android:icon="@mipmap/ic_launcher">
-        <activity android:name="com.amplifyframework.auth.cognito.activities.HostedUIRedirectActivity">
+        <activity android:name="com.amplifyframework.auth.cognito.activities.HostedUIRedirectActivity"
+            android:exported="true">
           <intent-filter>
               <action android:name="android.intent.action.VIEW" />
               <category android:name="android.intent.category.DEFAULT" />

@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:qrious_createrapp/pages/UploadVideo.dart';
+import 'package:qrious_createrapp/pages/CreateNewsStoryPage.dart';
 import 'package:qrious_createrapp/dummy/AddVideo.dart';
 import 'package:qrious_createrapp/pages/LoginPage.dart';
 import 'package:qrious_createrapp/pages/VideoStoriesFeed.dart';
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AddVideoPlayer(file: _file),
+            builder: (context) => CreateNewsStoryPage(file: _file),
             // builder: (context) => AddVideoScreen(file: _file),
           ),
         );

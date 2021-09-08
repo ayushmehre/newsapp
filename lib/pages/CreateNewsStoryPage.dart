@@ -5,21 +5,23 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:qrious_createrapp/models/NewsStoryObject.dart';
+import 'package:qrious_createrapp/utils/UserUtils.dart';
 import 'package:qrious_createrapp/utils/api.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
 import 'package:qrious_createrapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
 
-class AddVideoPlayer extends StatefulWidget {
+class CreateNewsStoryPage extends StatefulWidget {
   final File file;
 
-  const AddVideoPlayer({Key? key, required this.file}) : super(key: key);
+  const CreateNewsStoryPage({Key? key, required this.file}) : super(key: key);
 
   @override
-  _AddVideoPlayerState createState() => _AddVideoPlayerState();
+  _CreateNewsStoryPageState createState() => _CreateNewsStoryPageState();
 }
 
-class _AddVideoPlayerState extends State<AddVideoPlayer> {
+class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
   final _formKey = GlobalKey<FormState>();
   late FlickManager flickManager;
   bool isLoading = false;
@@ -363,6 +365,7 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
   }
 
   publishVideoToServer() async {
+    //Validating inputs
     if (_formKey.currentState!.validate()) {
       if(tagsList.length < 3) {
         setState(() {
@@ -373,19 +376,24 @@ class _AddVideoPlayerState extends State<AddVideoPlayer> {
       setState(() {
         isLoading = true;
       });
-      var uploadUrl = await API().fetchUploadUrl();
-      print(uploadUrl);
-      if (uploadUrl != null) {
-        var uploadResponseStatusCode =
-            await API().uploadVideo(uploadUrl, widget.file);
-        if (uploadResponseStatusCode == 200) {
+
+      //Starting to upload
+      var response = await API().fetchUploadUrl();
+      if (response != null) {
+        var uploadURL = response['uploadURL'];
+        var videoUploadSuccess =
+            await API().uploadVideo(uploadURL, widget.file);
+        if (videoUploadSuccess) {
+           var currentUser = await UserUtils.getCurrentUser();
+           NewsStoryObject? newsStoryObject  = await API().createNewsStory('title', 'desc', uploadURL, currentUser.userId??0);
           setState(() {
             isLoading = false;
+          });
+          if (newsStoryObject!=null) {
             showErrorDialog(context, "Success", "Your video is uploaded successfully");
             Navigator.pop(context);
-          });
+          }
         }
-        print(uploadResponseStatusCode.runtimeType);
       }
     }
   }

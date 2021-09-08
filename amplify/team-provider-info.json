@@ -16,5 +16,18 @@
         "qriouscreaterapp5db8a4bd": {}
       }
     }
+  },
+  "devayush": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-qriouscreaterapp-devayush-190545-authRole",
+      "UnauthRoleArn": "arn:aws:iam::293016796637:role/amplify-qriouscreaterapp-devayush-190545-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::293016796637:role/amplify-qriouscreaterapp-devayush-190545-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-qriouscreaterapp-devayush-190545-deployment",
+      "UnauthRoleName": "amplify-qriouscreaterapp-devayush-190545-unauthRole",
+      "StackName": "amplify-qriouscreaterapp-devayush-190545",
+      "StackId": "arn:aws:cloudformation:ap-south-1:293016796637:stack/amplify-qriouscreaterapp-devayush-190545/2f8695b0-0e4e-11ec-9143-0a672714fe52",
+      "AmplifyAppId": "d2i6z8m28yx9ax"
+    }
   }
 }

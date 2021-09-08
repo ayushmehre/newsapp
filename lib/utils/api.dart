@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:http/http.dart' as http;
+import 'package:qrious_createrapp/models/NewsStoryObject.dart';
 import 'package:qrious_createrapp/models/UserObject.dart';
 
 Future<Uint8List> _readFileByte(File filePath) async {
@@ -92,35 +93,35 @@ class API {
     }
   }
 
-  Future uploadVideoPostRequest(file) async {
-    try {
-      http.Response response = await http.get(upload_video_uri);
-      print('\n\n ${jsonDecode(response.body)} \n\n');
-      var urlResponse = jsonDecode(response.body);
-      var bytes = _readFileByte(file);
+  // Future uploadVideoPostRequest(file) async {
+  //   try {
+  //     http.Response response = await http.get(upload_video_uri);
+  //     print('\n\n ${jsonDecode(response.body)} \n\n');
+  //     var urlResponse = jsonDecode(response.body);
+  //     var bytes = _readFileByte(file);
+  //
+  //     print(
+  //       '\n SignUpUserPostRequest Success >>>> :: $bytes \n ${bytes.runtimeType} \n',
+  //     );
+  //     print(urlResponse);
+  //     print('\n urlResponse: ${urlResponse["uploadURL"]}');
+  //     print(
+  //       '\n urlResponse type: ${urlResponse["uploadURL"].runtimeType} \n',
+  //     );
+  //
+  //     Uri upload_video_response_uri = Uri.parse(urlResponse["uploadURL"]);
+  //     http.Response response2 = await http.put(
+  //       upload_video_response_uri,
+  //       body: await _readFileByte(file),
+  //     );
+  //     print('\n Response2 Success >>>> :: ${jsonDecode(response2.body)} \n');
+  //   } catch (e) {
+  //     print('\n\n \n\n Response2 Failed >>>> ::');
+  //     print(e);
+  //   }
+  // }
 
-      print(
-        '\n SignUpUserPostRequest Success >>>> :: $bytes \n ${bytes.runtimeType} \n',
-      );
-      print(urlResponse);
-      print('\n urlResponse: ${urlResponse["uploadURL"]}');
-      print(
-        '\n urlResponse type: ${urlResponse["uploadURL"].runtimeType} \n',
-      );
-
-      Uri upload_video_response_uri = Uri.parse(urlResponse["uploadURL"]);
-      http.Response response2 = await http.put(
-        upload_video_response_uri,
-        body: await _readFileByte(file),
-      );
-      print('\n Response2 Success >>>> :: ${jsonDecode(response2.body)} \n');
-    } catch (e) {
-      print('\n\n \n\n Response2 Failed >>>> ::');
-      print(e);
-    }
-  }
-
-  Future<String?> fetchUploadUrl() async {
+  Future<Map?> fetchUploadUrl() async {
     try {
       // Fetching UploadUrl
       http.Response response = await http.get(upload_video_uri);
@@ -131,7 +132,10 @@ class API {
       print('\n urlResponse: ${urlResponse["uploadURL"]}');
 
       // Returning Url
-      return urlResponse["uploadURL"];
+      return {
+        'uploadURL': urlResponse["uploadURL"],
+        'filename':urlResponse["filename"]
+      };
     } catch (e) {
       print('\n\n \n\n fetchUploadUrl Failed >>>> ::');
       print(e);
@@ -139,7 +143,7 @@ class API {
     }
   }
 
-  uploadVideo(String urlResponse, File file) async {
+  Future<bool> uploadVideo(String urlResponse, File file) async {
     try {
       // Converting file to Unit8List byte data
       var bytes = _readFileByte(file);
@@ -157,11 +161,16 @@ class API {
       print('\n uploadVideo Success >>>> :: ${response.statusCode} \n');
 
       // Returning Response
-      return (response.statusCode);
+      return (response.statusCode==200);
     } catch (e) {
       print('\n\n \n\n uploadVideo Failed >>>> ::');
       print(e);
-      return null;
+      return false;
     }
+  }
+
+  Future<NewsStoryObject?> createNewsStory(String title, String desc, String uploadURL, int userId) {
+    //TODO Ankit will continue
+    return null;
   }
 }

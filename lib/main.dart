@@ -5,9 +5,9 @@ import 'dart:async';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qrious_createrapp/models/UserObject.dart';
-import 'package:qrious_createrapp/pages/HomePage.dart';
 import 'package:qrious_createrapp/pages/LoginPage.dart';
 import 'package:qrious_createrapp/tabs/bottom_nav.dart';
+import 'package:qrious_createrapp/utils/UserUtils.dart';
 import 'package:qrious_createrapp/utils/api.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
 import 'package:qrious_createrapp/widgets/widgets.dart';
@@ -57,9 +57,11 @@ class _SplashScreenState extends State<SplashScreen> {
       var user = await Amplify.Auth.getCurrentUser();
       var userAttributes = await Amplify.Auth.fetchUserAttributes();
       String email = findEmailAttribute(userAttributes);
-      var exists = await checkIfUserExists(email);
-      if (exists) {
+      UserObject? userObj = await checkIfUserExists(email);
+      print('\n\n UserObject? userObj :> $userObj');
+      if (userObj != null) {
         navigateToHomeScreen();
+        UserUtils.saveUserObject(userObj);
       } else {
         openLogin();
       }
@@ -100,12 +102,12 @@ class _SplashScreenState extends State<SplashScreen> {
     return email;
   }
 
-  Future<bool> checkIfUserExists(String email) async {
+  Future<UserObject?> checkIfUserExists(String email) async {
     UserObject? user = await API().getUserByEmail(email);
     if (user != null) {
-      return true;
+      return user;
     } else {
-      return false;
+      return null;
     }
   }
 

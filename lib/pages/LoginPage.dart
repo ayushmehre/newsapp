@@ -3,8 +3,6 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
-import 'package:flutter_signin_button/button_view.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:qrious_createrapp/tabs/bottom_nav.dart';
 import 'package:qrious_createrapp/utils/api.dart';
 import 'package:qrious_createrapp/utils/colors.dart';
@@ -28,16 +26,18 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = true;
     });
     try {
-      var res = await Amplify.Auth.signInWithWebUI(provider: AuthProvider.google);
-        print('\n\n \n\n $res');
-        var token = res.nextStep!.additionalInfo!['token'];
-        var provider = res.nextStep!.additionalInfo!['provider'];
-        _prefs.then((prefs) {
-          prefs.setString("google_signin_token", token);
-          prefs.setString("google_signin_provider", provider);
-        });
+      var res = await Amplify.Auth.signInWithWebUI(
+        provider: AuthProvider.google,
+      );
+      print('\n\n \n\n $res');
+      var token = res.nextStep!.additionalInfo!['token'];
+      var provider = res.nextStep!.additionalInfo!['provider'];
+      _prefs.then((prefs) {
+        prefs.setString("google_signin_token", token);
+        prefs.setString("google_signin_provider", provider);
+      });
 
-        handleLogin(token);
+      handleLogin(token);
     } on AmplifyException catch (e) {
       setState(() {
         isLoading = false;
@@ -57,33 +57,43 @@ class _LoginPageState extends State<LoginPage> {
           final email = value[i].value;
           print(value[i].userAttributeKey);
 
-          API().signupUserPostRequest(
-            email: email,
-            name: "Ankit Jain",
-            token: token,
-            callback: (code, response) {
-              setState(() {
-                isLoading = false;
-              });
-              if (code == 'Success') {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottomNav(),
-                  ),
-                );
-              }
-            },
-          );
+          createNewUser(email, token);
         }
       }
-
     } catch (e) {
       print("\n\n Error $e");
       setState(() {
         isLoading = false;
       });
     }
+  }
+
+  void createNewUser(email, String token) {
+    API().signupCreateNewUser(
+      email: email,
+      name: "Ankit Jain",
+      token: token,
+      callback: (code, response) {
+        print("\n\n \n\n User Object Response >> $response \n\n \n\n");
+        setState(() {
+          isLoading = false;
+        });
+        if (code == 'Success') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomNav(),
+            ),
+          );
+        }
+        if(code == null) {
+          setState(() {
+            isLoading = false;
+          });
+          return;
+        }
+      },
+    );
   }
 
   Widget buildGoogleSignInButton() {
@@ -121,7 +131,12 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        getTitleWidget(60, "Pocket", "Daily", CustomColors().red),
+                        getTitleWidget(
+                          60,
+                          "Pocket",
+                          "Daily",
+                          CustomColors().red,
+                        ),
                         subTitleWidget(
                           'Quality Journalism in 30 seconds',
                           18,

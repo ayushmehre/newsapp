@@ -23,6 +23,9 @@ class CreateNewsStoryPage extends StatefulWidget {
 
 class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
   final _formKey = GlobalKey<FormState>();
+
+  late TextEditingController videoName, videoDesc;
+
   late FlickManager flickManager;
   bool isLoading = false;
   bool tagserror = false;
@@ -41,6 +44,8 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
       isLoading = false;
       tagserror = false;
     });
+    videoName = TextEditingController();
+    videoDesc = TextEditingController();
   }
 
   @override
@@ -149,7 +154,11 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
                 children: [
                   CircularProgressIndicator(color: CustomColors().black),
                   SizedBox(height: 16),
-                  Text('Uploading...', style: TextStyle(fontSize: 18))
+                  Text('Uploading...', style: TextStyle(fontSize: 18)),
+                  SizedBox(height: 6),
+                  Text("It may take a while"),
+                  SizedBox(height: 6),
+                  Text("(1-2 minutes)"),
                 ],
               ),
             )
@@ -159,7 +168,6 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
                 child: Column(
                   children: [
                     showVideo(length),
-                    // SizedBox(height: 20),
                     _inputFieldsWidget(length: length),
                   ],
                 ),
@@ -173,7 +181,7 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
       child: Column(
         children: <Widget>[
-          _entryField(
+          _customInputField(
             "Video Title",
             validator: (val) {
               if (val!.isEmpty) {
@@ -182,8 +190,9 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
                 return null;
               }
             },
+            controller: videoName,
           ),
-          _entryField(
+          _customInputField(
             "Video Description",
             maxlines: 5,
             validator: (val) {
@@ -193,9 +202,46 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
                 return null;
               }
             },
+            controller: videoDesc,
           ),
           _addtagField("Tags"),
           _submitButton(length: length),
+        ],
+      ),
+    );
+  }
+
+  Widget _customInputField(
+    String title, {
+    bool isPassword = false,
+    int maxlines = 1,
+    String? Function(String?)? validator,
+    TextEditingController? controller,
+  }) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(height: 10),
+          TextFormField(
+            maxLines: null,
+            minLines: maxlines,
+            obscureText: isPassword,
+            validator: validator,
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: "Enter $title",
+              hintStyle: TextStyle(fontSize: 14, color: CustomColors().grey),
+              border: InputBorder.none,
+              fillColor: CustomColors().fillColor,
+              filled: true,
+            ),
+          )
         ],
       ),
     );
@@ -217,40 +263,6 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
               child: FlickVideoPlayer(flickManager: flickManager),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _entryField(
-    String title, {
-    bool isPassword = false,
-    int maxlines = 1,
-    String? Function(String?)? validator,
-  }) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(height: 10),
-          TextFormField(
-            maxLines: null,
-            minLines: maxlines,
-            obscureText: isPassword,
-            validator: validator,
-            decoration: InputDecoration(
-              hintText: "Enter $title",
-              hintStyle: TextStyle(fontSize: 14, color: CustomColors().grey),
-              border: InputBorder.none,
-              fillColor: CustomColors().fillColor,
-              filled: true,
-            ),
-          )
         ],
       ),
     );
@@ -332,13 +344,15 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
                     ),
             ),
           ),
-          tagserror ? Container(
-            margin: EdgeInsets.only(top: 5),
-            child: Text(
-              "Please select atlease 3 tags",
-              style: TextStyle(fontSize: 12, color: CustomColors().red),
-            ),
-          ) : Container(),
+          tagserror
+              ? Container(
+                  margin: EdgeInsets.only(top: 5),
+                  child: Text(
+                    "Please select atlease 3 tags",
+                    style: TextStyle(fontSize: 12, color: CustomColors().red),
+                  ),
+                )
+              : Container(),
           Container(
             alignment: Alignment.centerRight,
             child: OutlinedButton(
@@ -367,7 +381,7 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
   publishVideoToServer() async {
     //Validating inputs
     if (_formKey.currentState!.validate()) {
-      if(tagsList.length < 3) {
+      if (tagsList.length < 3) {
         setState(() {
           tagserror = true;
         });
@@ -381,18 +395,39 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
       var response = await API().fetchUploadUrl();
       if (response != null) {
         var uploadURL = response['uploadURL'];
-        var videoUploadSuccess =
-            await API().uploadVideo(uploadURL, widget.file);
+        var videoUploadSuccess = await API().uploadVideo(
+          uploadURL,
+          widget.file,
+        );
         if (videoUploadSuccess) {
-           var currentUser = await UserUtils.getCurrentUser();
-           NewsStoryObject? newsStoryObject  = await API().createNewsStory('title', 'desc', uploadURL, currentUser.userId??0);
-          setState(() {
-            isLoading = false;
-          });
-          if (newsStoryObject!=null) {
-            showErrorDialog(context, "Success", "Your video is uploaded successfully");
-            Navigator.pop(context);
+          try {
+            var currentUser = await UserUtils.getCurrentUser();
+            print("\n\n currentUsercurrentUser: $currentUser");
+            NewsStoryObject? newsStoryObject = await API().createNewsStory(
+              videoName.toString(),
+              videoDesc.toString(),
+              uploadURL,
+              currentUser.userId ?? 0,
+            );
+            setState(() {
+              isLoading = false;
+            });
+            if (newsStoryObject != null) {
+              showErrorDialog(
+                context,
+                "Success",
+                "Your video is uploaded successfully",
+              );
+              Navigator.pop(context);
+            }
+          } catch (e) {
+            print('\n\n \n\n currentUser Failed >>>> ::');
+            print(e);
+            setState(() {
+              isLoading = false;
+            });
           }
+
         }
       }
     }

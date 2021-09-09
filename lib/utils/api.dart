@@ -17,32 +17,40 @@ Future<Uint8List> _readFileByte(File filePath) async {
 
 class API {
   static final BASE_URL =
-      "https://akugo8ysj8.execute-api.ap-south-1.amazonaws.com/dev";
-  static final BASE_URL_DEFAULT =
-      "https://akugo8ysj8.execute-api.ap-south-1.amazonaws.com/default";
+      "https://jgqn3d1fng.execute-api.ap-south-1.amazonaws.com/dev";
 
-  static final UPLOAD_VIDEO_URL =
-      "https://hpe74fftu9.execute-api.ap-south-1.amazonaws.com/default/VideoUpload";
+  // static final BASE_URL =
+  //     "https://jgqn3d1fng.execute-api.ap-south-1.amazonaws.com/test";
+  //
+  // static final BASE_URL =
+  //     "https://jgqn3d1fng.execute-api.ap-south-1.amazonaws.com/prod";
 
-  static final SIGNUP_USER_URL = "$BASE_URL/CreateNewUser";
+  static final UPLOAD_VIDEO_URL = "$BASE_URL/videoUpload";
 
-  static var GET_USER_BY_EMAIL_URL = "$BASE_URL/GetUserByEmail?email=";
+  static final SIGNUP_USER_URL = "$BASE_URL/createNewUser";
 
-  static var GET_USER_BY_ID_URL = "$BASE_URL/GetUserById?user_id=";
+  static var GET_USER_BY_EMAIL_URL = "$BASE_URL/getUserByEmail?email=";
+
+  static var GET_USER_BY_ID_URL = "$BASE_URL/getUserById?user_id=";
+
+  static final CREATE_NEWS_STORY_URL = "$BASE_URL/createNewsStory";
 
   Uri upload_video_uri = Uri.parse(UPLOAD_VIDEO_URL);
-
-  Uri signup_user_uri = Uri.parse(SIGNUP_USER_URL);
 
   Future<UserObject?> getUserByEmail(String email) async {
     // Parsing GET USER bY EMAIL URL
     var NEW_GET_USER_BY_EMAIL = GET_USER_BY_EMAIL_URL + email;
-    Uri user_email_uri = Uri.parse(GET_USER_BY_EMAIL_URL);
+    Uri user_email_uri = Uri.parse(NEW_GET_USER_BY_EMAIL);
+
+    print("\n\n \n\n NEW_GET_USER_BY_EMAIL:> $NEW_GET_USER_BY_EMAIL");
 
     try {
       http.Response response = await http.get(user_email_uri);
       print('\n\n ${jsonDecode(response.body)} \n\n');
-      return UserObject.fromJson(jsonDecode(response.body));
+      print('\n\n ${(jsonDecode(response.body)['data'])} \n\n');
+      UserObject userObj = UserObject.fromJson(jsonDecode(response.body)['data'][0]);
+      print('\n\n \n\n userObjuserObj: ${userObj.toJson()}');
+      return userObj;
     } catch (e) {
       print('\n\n Error: $e \n\n');
       return null;
@@ -63,7 +71,7 @@ class API {
     }
   }
 
-  signupUserPostRequest({
+  signupCreateNewUser({
     required String email,
     required String token,
     required String name,
@@ -81,11 +89,7 @@ class API {
     };
 
     try {
-      http.Response response = await http.post(
-        signup_user_uri,
-        body: json.encode(bodyobj),
-        headers: {"Content-Type": "application/json"},
-      );
+      http.Response response = await sendPostRequest(SIGNUP_USER_URL, bodyobj);
       print('\n\n ${jsonDecode(response.body)} \n\n');
       callback("Success", jsonDecode(response.body));
     } catch (e) {
@@ -134,7 +138,7 @@ class API {
       // Returning Url
       return {
         'uploadURL': urlResponse["uploadURL"],
-        'filename':urlResponse["filename"]
+        'filename': urlResponse["filename"]
       };
     } catch (e) {
       print('\n\n \n\n fetchUploadUrl Failed >>>> ::');
@@ -161,7 +165,7 @@ class API {
       print('\n uploadVideo Success >>>> :: ${response.statusCode} \n');
 
       // Returning Response
-      return (response.statusCode==200);
+      return (response.statusCode == 200);
     } catch (e) {
       print('\n\n \n\n uploadVideo Failed >>>> ::');
       print(e);
@@ -169,8 +173,34 @@ class API {
     }
   }
 
-  Future<NewsStoryObject?> createNewsStory(String title, String desc, String uploadURL, int userId) {
+  Future<NewsStoryObject?> createNewsStory(
+      String title, String desc, String uploadURL, int userId) async {
     //TODO Ankit will continue
-    return null;
+
+    var bodyobj = {
+      "title": title,
+      "desc": desc,
+      "video_link": uploadURL,
+      "author_id": userId,
+    };
+    try {
+      http.Response response = await sendPostRequest(CREATE_NEWS_STORY_URL, bodyobj);
+      // http.Response response = await http.post(create_news_story_uri);
+      print('\n\n ${jsonDecode(response.body)} \n\n');
+      return NewsStoryObject.fromJson(jsonDecode(response.body));
+    } catch (e) {
+      print('\n\n Error: $e \n\n');
+      return null;
+    }
+    // return null;
   }
+}
+
+sendPostRequest(String url, Map<String, dynamic> body) async {
+  http.Response response = await http.post(
+    Uri.parse(url),
+    body: json.encode(body),
+    headers: {"Content-Type": "application/json"},
+  );
+  return response;
 }

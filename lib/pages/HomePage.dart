@@ -28,6 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   late File _file;
   final selected = ImagePicker();
 
+  getHomePageStoriesFeeds() {
+
+  }
+
   Future getImage() async {
     final selectedImage = await selected.pickVideo(source: ImageSource.gallery);
     var a = await videoInfo.getVideoInfo(selectedImage!.path);

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:qrious_createrapp/widgets/custom_clipper.dart';
+import 'package:newsapp/widgets/custom_clipper.dart';
 
 class BezierContainer extends StatelessWidget {
   @override

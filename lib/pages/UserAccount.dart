@@ -3,9 +3,11 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qrious_createrapp/dummy/login_view.dart';
-import 'package:qrious_createrapp/pages/LoginPage.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
+import 'package:newsapp/dummy/login_view.dart';
+import 'package:newsapp/models/UserObject.dart';
+import 'package:newsapp/pages/LoginPage.dart';
+import 'package:newsapp/utils/UserUtils.dart';
+import 'package:newsapp/utils/colors.dart';
 
 class UserAccount extends StatefulWidget {
   const UserAccount({Key? key}) : super(key: key);
@@ -15,6 +17,9 @@ class UserAccount extends StatefulWidget {
 }
 
 class _UserAccountState extends State<UserAccount> {
+
+  UserObject? currentUser;
+
   handleLogout() {
     try {
       Amplify.Auth.signOut().then(
@@ -39,7 +44,7 @@ class _UserAccountState extends State<UserAccount> {
             Container(
               margin: EdgeInsets.fromLTRB(16, 20, 16, 40),
               child: Text(
-                'User Account',
+                currentUser?.name ?? 'User Account',
                 style: GoogleFonts.roboto(
                   textStyle: TextStyle(
                     fontSize: 44,

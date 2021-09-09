@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
+import 'package:newsapp/utils/colors.dart';
 import 'package:story_view/story_view.dart';
 
 Widget getVideoStories(BuildContext context, storyController, int likes) {

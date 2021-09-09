@@ -3,11 +3,11 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
-import 'package:qrious_createrapp/tabs/bottom_nav.dart';
-import 'package:qrious_createrapp/utils/api.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
-import 'package:qrious_createrapp/widgets/customSignInButton.dart';
-import 'package:qrious_createrapp/widgets/widgets.dart';
+import 'package:newsapp/tabs/bottom_nav.dart';
+import 'package:newsapp/utils/api.dart';
+import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/customSignInButton.dart';
+import 'package:newsapp/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -133,8 +133,6 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         getTitleWidget(
                           60,
-                          "Pocket",
-                          "Daily",
                           CustomColors().red,
                         ),
                         subTitleWidget(

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qrious_createrapp/models/UserObject.dart';
-import 'package:qrious_createrapp/pages/LoginPage.dart';
-import 'package:qrious_createrapp/tabs/bottom_nav.dart';
-import 'package:qrious_createrapp/utils/UserUtils.dart';
-import 'package:qrious_createrapp/utils/api.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
-import 'package:qrious_createrapp/widgets/widgets.dart';
+import 'package:newsapp/models/UserObject.dart';
+import 'package:newsapp/pages/LoginPage.dart';
+import 'package:newsapp/tabs/bottom_nav.dart';
+import 'package:newsapp/utils/UserUtils.dart';
+import 'package:newsapp/utils/api.dart';
+import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/widgets.dart';
 
 import 'amplifyconfiguration.dart';
 
@@ -81,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              getTitleWidget(60, "Pocket", "Daily", CustomColors().white),
+              getTitleWidget(60, CustomColors().white),
               // subTitleWidget('Quality Journalism in 30 seconds', 22, white),
             ],
           ),

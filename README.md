@@ -1,4 +1,4 @@
-# qrious_createrapp
+# newsapp
 
 A new Flutter project.
 

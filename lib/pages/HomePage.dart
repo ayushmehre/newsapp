@@ -6,12 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:qrious_createrapp/pages/CreateNewsStoryPage.dart';
-import 'package:qrious_createrapp/dummy/AddVideo.dart';
-import 'package:qrious_createrapp/pages/LoginPage.dart';
-import 'package:qrious_createrapp/pages/VideoStoriesFeed.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
-import 'package:qrious_createrapp/widgets/widgets.dart';
+import 'package:newsapp/pages/CreateNewsStoryPage.dart';
+import 'package:newsapp/dummy/AddVideo.dart';
+import 'package:newsapp/pages/LoginPage.dart';
+import 'package:newsapp/pages/VideoStoriesFeed.dart';
+import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
 

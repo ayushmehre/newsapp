@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:qrious_createrapp/pages/ExplorePage.dart';
-import 'package:qrious_createrapp/pages/HomePage.dart';
-import 'package:qrious_createrapp/pages/UserAccount.dart';
-import 'package:qrious_createrapp/pages/UserFeeds.dart';
-import 'package:qrious_createrapp/tabs/bottom_tabs.dart';
+import 'package:newsapp/pages/ExplorePage.dart';
+import 'package:newsapp/pages/HomePage.dart';
+import 'package:newsapp/pages/UserAccount.dart';
+import 'package:newsapp/pages/UserFeeds.dart';
+import 'package:newsapp/tabs/bottom_tabs.dart';
 
 class BottomNav extends StatefulWidget {
   @override

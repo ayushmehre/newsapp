@@ -2,10 +2,10 @@
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
-// import 'package:qrious_createrapp/tabs/bottom_nav.dart';
-// import 'package:qrious_createrapp/utils/api.dart';
-// import 'package:qrious_createrapp/utils/colors.dart';
-// import 'package:qrious_createrapp/widgets/Brezier_container.dart';
+// import 'package:newsapp/tabs/bottom_nav.dart';
+// import 'package:newsapp/utils/api.dart';
+// import 'package:newsapp/utils/colors.dart';
+// import 'package:newsapp/widgets/Brezier_container.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 //
 // class InputNameScreen extends StatefulWidget {

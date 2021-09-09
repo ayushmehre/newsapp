@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qrious_createrapp/pages/LoginPage.dart';
-import 'package:qrious_createrapp/widgets/Brezier_container.dart';
+import 'package:newsapp/pages/LoginPage.dart';
+import 'package:newsapp/widgets/Brezier_container.dart';
 
 class SignUpPage extends StatefulWidget {
   @override

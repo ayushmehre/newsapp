@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
+import 'package:newsapp/utils/colors.dart';
 
 class UserFeeds extends StatefulWidget {
   const UserFeeds({Key? key}) : super(key: key);

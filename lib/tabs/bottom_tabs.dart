@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
+import 'package:newsapp/utils/colors.dart';
 
 class BottomTabs extends StatefulWidget {
   final int selectedTab;

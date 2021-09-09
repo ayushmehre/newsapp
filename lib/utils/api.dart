@@ -5,8 +5,8 @@ import 'dart:ui';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:http/http.dart' as http;
-import 'package:qrious_createrapp/models/NewsStoryObject.dart';
-import 'package:qrious_createrapp/models/UserObject.dart';
+import 'package:newsapp/models/NewsStoryObject.dart';
+import 'package:newsapp/models/UserObject.dart';
 
 Future<Uint8List> _readFileByte(File filePath) async {
   print("\n 11111: \n");

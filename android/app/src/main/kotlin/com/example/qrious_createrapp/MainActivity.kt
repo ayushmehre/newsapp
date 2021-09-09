@@ -1,4 +1,4 @@
-package com.example.qrious_createrapp
+package com.example.newsapp
 
 import io.flutter.embedding.android.FlutterActivity
 

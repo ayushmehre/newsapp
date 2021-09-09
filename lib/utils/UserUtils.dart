@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:qrious_createrapp/models/UserObject.dart';
+import 'package:newsapp/models/UserObject.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserUtils {

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
+import 'package:newsapp/utils/colors.dart';
 
 // Build an alert to show some errors
 Future<void> showErrorDialog(BuildContext context, String title, String error) async {
@@ -28,11 +28,11 @@ Future<void> showErrorDialog(BuildContext context, String title, String error) a
   );
 }
 
-Widget getTitleWidget(double fs, String text1, String text2, Color? color) {
+Widget getTitleWidget(double fs, Color? color) {
   return RichText(
     textAlign: TextAlign.center,
     text: TextSpan(
-      text: text1,
+      text: 'Pocket',
       style: GoogleFonts.roboto(
         fontSize: fs,
         fontWeight: FontWeight.w900,
@@ -40,7 +40,7 @@ Widget getTitleWidget(double fs, String text1, String text2, Color? color) {
       ),
       children: [
         TextSpan(
-          text: text2,
+          text: 'Feed',
           style: GoogleFonts.roboto(
             fontSize: fs,
             fontWeight: FontWeight.w900,

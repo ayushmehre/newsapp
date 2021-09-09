@@ -5,11 +5,11 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:qrious_createrapp/models/NewsStoryObject.dart';
-import 'package:qrious_createrapp/utils/UserUtils.dart';
-import 'package:qrious_createrapp/utils/api.dart';
-import 'package:qrious_createrapp/utils/colors.dart';
-import 'package:qrious_createrapp/widgets/widgets.dart';
+import 'package:newsapp/models/NewsStoryObject.dart';
+import 'package:newsapp/utils/UserUtils.dart';
+import 'package:newsapp/utils/api.dart';
+import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 class CreateNewsStoryPage extends StatefulWidget {

@@ -20,6 +20,7 @@ class UserUtils {
   static saveUserObject(UserObject userObj) async {
     print("\n\n \n\n userObj: ${userObj.toJson()}");
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(USER_OBJECT_KEY, userObj.toJson().toString());
+    // var tmp=json.encode(userObj.toJson());
+    sharedPreferences.setString(USER_OBJECT_KEY, json.encode(userObj.toJson()));
   }
 }

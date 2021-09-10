@@ -395,6 +395,7 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
       var response = await API().fetchUploadUrl();
       if (response != null) {
         var uploadURL = response['uploadURL'];
+        var filename = response['filename'];
         var videoUploadSuccess = await API().uploadVideo(
           uploadURL,
           widget.file,
@@ -402,11 +403,11 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
         if (videoUploadSuccess) {
           try {
             var currentUser = await UserUtils.getCurrentUser();
-            print("\n\n currentUsercurrentUser: $currentUser");
+            print("\n\n currentUsercurrentUser: ${currentUser.userId}");
             NewsStoryObject? newsStoryObject = await API().createNewsStory(
-              videoName.toString(),
-              videoDesc.toString(),
-              uploadURL,
+              videoName.text.toString(),
+              videoDesc.text.toString(),
+              API.VIDEO_URL+filename,
               currentUser.userId ?? 0,
             );
             setState(() {

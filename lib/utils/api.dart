@@ -32,6 +32,9 @@ class API {
   static final CREATE_NEWS_STORY_URL = "$BASE_URL/createNewsStory";
   static final GET_NEWS_STORY_URL = "$BASE_URL/getNewsStories";
 
+  static final VIDEO_URL =
+      "https://newsvideosupload.s3.ap-south-1.amazonaws.com/";
+
   Uri upload_video_uri = Uri.parse(UPLOAD_VIDEO_URL);
 
   Future<UserObject?> getUserByEmail(String email) async {
@@ -178,7 +181,7 @@ class API {
       "title": title,
       "desc": desc,
       "video_link": uploadURL,
-      "author_id": userId,
+      "user_id": userId,
     };
     try {
       http.Response response = await sendPostRequest(CREATE_NEWS_STORY_URL, bodyobj);

@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ):Container(
               height: MediaQuery.of(context).size.height,
-              child: Center(child: CircularProgressIndicator(color: Colors.black,)),
+              child: customProgressIndicator(),
             )
             // for (var i = 0; i < 10; i++)
             //   listComponent(
@@ -176,7 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           getImage();
         },
-        child: Icon(Icons.add),
+        backgroundColor: CustomColors().red,
+        child: Icon(Icons.add,size: 40,),
       ),
     );
   }

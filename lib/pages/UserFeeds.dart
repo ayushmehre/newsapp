@@ -14,12 +14,19 @@ class _UserFeedsState extends State<UserFeeds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomColors().white,
+      appBar: AppBar(
+        toolbarHeight: 4,
+        backgroundColor: CustomColors().white,
+        elevation: 0,
+      ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             margin: EdgeInsets.fromLTRB(16, 20, 16, 40),
             child: Text(
-              'Trending Now',
+              'User Feeds',
               style: GoogleFonts.roboto(
                 textStyle: TextStyle(
                   fontSize: 44,

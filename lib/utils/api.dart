@@ -26,14 +26,11 @@ class API {
   //     "https://jgqn3d1fng.execute-api.ap-south-1.amazonaws.com/prod";
 
   static final UPLOAD_VIDEO_URL = "$BASE_URL/videoUpload";
-
   static final SIGNUP_USER_URL = "$BASE_URL/createNewUser";
-
   static var GET_USER_BY_EMAIL_URL = "$BASE_URL/getUserByEmail?email=";
-
   static var GET_USER_BY_ID_URL = "$BASE_URL/getUserById?user_id=";
-
   static final CREATE_NEWS_STORY_URL = "$BASE_URL/createNewsStory";
+  static final GET_NEWS_STORY_URL = "$BASE_URL/getNewsStories";
 
   Uri upload_video_uri = Uri.parse(UPLOAD_VIDEO_URL);
 
@@ -193,6 +190,19 @@ class API {
       return null;
     }
     // return null;
+  }
+
+  Future<Map<String,dynamic>> getNewsStory() async {
+    // Get All News Story
+    Uri getNewsStory = Uri.parse(GET_NEWS_STORY_URL);
+    try {
+      http.Response response = await http.get(getNewsStory);
+      print('\n\n ${jsonDecode(response.body)} \n\n');
+      return jsonDecode(response.body);
+    } catch (e) {
+      print('\n\n Error: $e \n\n');
+      return {};
+    }
   }
 }
 

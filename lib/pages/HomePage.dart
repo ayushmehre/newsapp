@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/pages/CreateNewsStoryPage.dart';
 import 'package:newsapp/dummy/AddVideo.dart';
 import 'package:newsapp/pages/LoginPage.dart';
 import 'package:newsapp/pages/VideoStoriesFeed.dart';
+import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:newsapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
@@ -27,9 +29,40 @@ class _HomeScreenState extends State<HomeScreen> {
   final videoInfo = FlutterVideoInfo();
   late File _file;
   final selected = ImagePicker();
+  late bool boolfeedsload=false;
+  late List<NewsStoryObject> Feedlist=[];
 
-  getHomePageStoriesFeeds() {
+  @override
+  void initState() {
+    super.initState();
+    getHomePageStoriesFeeds();
 
+  }
+
+  getHomePageStoriesFeeds()async {
+    Map<String,dynamic> response= await API().getNewsStory();
+    if(!response.isEmpty){
+      if(response["success"]){
+        List<NewsStoryObject> tmpList=[];
+        for(var dctData in response["data"]){
+          NewsStoryObject feedObj = NewsStoryObject.fromJson(dctData);
+          tmpList.add(feedObj);
+        }
+        setState(() {
+          Feedlist=tmpList;
+          boolfeedsload=true;
+        });
+        print(Feedlist.toString());
+      }else{
+        setState(() {
+          boolfeedsload=true;
+        });
+      }
+    }else{
+      setState(() {
+        boolfeedsload=true;
+      });
+    }
   }
 
   Future getImage() async {
@@ -99,18 +132,43 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            for (var i = 0; i < 10; i++)
-              listComponent(
-                index: (i + 1).toString(),
-                context: context,
-                title: 'Taliban takes control over Afghanistan',
-                info:
-                    "Google Fonts provides a wide range of fonts that can be used to improve the fonts of the User Interface",
-                comments: "1024",
-                views: "100K",
-                image:
-                    "https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
+            boolfeedsload?Container(
+              child: Feedlist.length==0?Container(
+                child: Center(child: Text("Error")),
+              ):Container(
+                height: MediaQuery.of(context).size.height-180,
+                child: ListView.builder(
+                    itemCount: Feedlist.length,
+                    itemBuilder: (context,index){
+                      return  listComponent(
+                            index: (index + 1).toString(),
+                            context: context,
+                            title: Feedlist[index].title,
+                            info: Feedlist[index].descption,
+                            comments: Feedlist[index].commentsCount.toString(),
+                            views: Feedlist[index].viewCount.toString(),
+                            image:
+                                "https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
+                          );
+                    }
+                ),
               ),
+            ):Container(
+              height: MediaQuery.of(context).size.height,
+              child: Center(child: CircularProgressIndicator(color: Colors.black,)),
+            )
+            // for (var i = 0; i < 10; i++)
+            //   listComponent(
+            //     index: (i + 1).toString(),
+            //     context: context,
+            //     title: 'Taliban takes control over Afghanistan',
+            //     info:
+            //         "Google Fonts provides a wide range of fonts that can be used to improve the fonts of the User Interface",
+            //     comments: "1024",
+            //     views: "100K",
+            //     image:
+            //         "https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
+            //   ),
           ],
         ),
       ),
@@ -181,6 +239,7 @@ Column listComponent({
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
+                            alignment: Alignment.centerLeft,
                             child: Text(
                               title!,
                               maxLines: 2,

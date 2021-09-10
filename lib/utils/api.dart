@@ -32,10 +32,14 @@ class API {
   static final CREATE_NEWS_STORY_URL = "$BASE_URL/createNewsStory";
   static final GET_NEWS_STORY_URL = "$BASE_URL/getNewsStories";
 
+  static var GET_CATEGORIES = "$BASE_URL/getCategories";
+
   static final VIDEO_URL =
       "https://newsvideosupload.s3.ap-south-1.amazonaws.com/";
 
   Uri upload_video_uri = Uri.parse(UPLOAD_VIDEO_URL);
+
+  Uri categories = Uri.parse(GET_CATEGORIES);
 
   Future<UserObject?> getUserByEmail(String email) async {
     // Parsing GET USER bY EMAIL URL
@@ -48,7 +52,8 @@ class API {
       http.Response response = await http.get(user_email_uri);
       print('\n\n ${jsonDecode(response.body)} \n\n');
       print('\n\n ${(jsonDecode(response.body)['data'])} \n\n');
-      UserObject userObj = UserObject.fromJson(jsonDecode(response.body)['data'][0]);
+      UserObject userObj =
+          UserObject.fromJson(jsonDecode(response.body)['data'][0]);
       print('\n\n \n\n userObjuserObj: ${userObj.toJson()}');
       return userObj;
     } catch (e) {
@@ -184,7 +189,8 @@ class API {
       "user_id": userId,
     };
     try {
-      http.Response response = await sendPostRequest(CREATE_NEWS_STORY_URL, bodyobj);
+      http.Response response =
+          await sendPostRequest(CREATE_NEWS_STORY_URL, bodyobj);
       // http.Response response = await http.post(create_news_story_uri);
       print('\n\n ${jsonDecode(response.body)} \n\n');
       return NewsStoryObject.fromJson(jsonDecode(response.body));
@@ -195,7 +201,7 @@ class API {
     // return null;
   }
 
-  Future<Map<String,dynamic>> getNewsStory() async {
+  Future<Map<String, dynamic>> getNewsStory() async {
     // Get All News Story
     Uri getNewsStory = Uri.parse(GET_NEWS_STORY_URL);
     try {
@@ -205,6 +211,16 @@ class API {
     } catch (e) {
       print('\n\n Error: $e \n\n');
       return {};
+    }
+  }
+
+  getCategories(callback) async {
+    try {
+      http.Response response = await http.get(categories);
+      print('\n\n ${jsonDecode(response.body)} \n\n');
+      callback("success", jsonDecode(response.body));
+    } catch (e) {
+      callback(null);
     }
   }
 }

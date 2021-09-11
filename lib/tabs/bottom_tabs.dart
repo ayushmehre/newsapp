@@ -100,7 +100,7 @@ class BottomTabBtn extends StatelessWidget {
           border: Border(
             top: BorderSide(
               color: _selected
-                  ? Theme.of(context).accentColor
+                  ? CustomColors().red
                   : Colors.transparent,
               width: 2.0,
             ),

@@ -66,27 +66,32 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                 ),
               ),
-              Container(
-                height: boolsearch_height?300:100,
-                child:  searchBar(isPortrait),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Text(
-                  'Category',
-                  style: GoogleFonts.roboto(
-                    textStyle: TextStyle(
-                      fontSize: 24,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w500,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: boolsearch_height?300:100,
+                    child:  buildSearchBar(isPortrait),
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Text(
+                      'Category',
+                      style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  listData == []
+                      ? Container(height:MediaQuery.of(context).size.height,child: customProgressIndicator(),)
+                      : buildCategory(width, context, listData),
+                  SizedBox(height: 80),
+                ],
               ),
-              listData == []
-                  ? Container(height:MediaQuery.of(context).size.height,child: customProgressIndicator(),)
-                  : gridWidgetDashboard(width, context, listData),
-              SizedBox(height: 80),
             ],
           ),
         ),
@@ -94,9 +99,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  Widget searchBar(isPortrait){
+  Widget buildSearchBar(isPortrait){
     return FloatingSearchBar(
         hint: 'Search...',
+        elevation: 0,
+        backgroundColor: Colors.grey[100],
         scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
         transitionDuration: const Duration(milliseconds: 800),
         transitionCurve: Curves.easeInOut,
@@ -149,7 +156,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  GridView gridWidgetDashboard(
+  GridView buildCategory(
     double width,
     BuildContext context,
     List<dynamic> listOfLocation1,
@@ -182,8 +189,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                color: CustomColors().grey),
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.grey[400]),
             child: Column(
               children: [
                 Container(
@@ -194,20 +201,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     borderRadius: BorderRadius.circular(50.0),
                     child: data['image_link'] == null
                         ? Container(
-                            color: Colors.white30,
+                            color: Colors.grey[500],
                           )
                         : Image.network(
                             data['image_link'] == null
                                 ? 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Z2lybCUyMGZhY2V8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'
                                 : data['image_link'],
-                            height: 50,
+                            height: 30,
                             fit: BoxFit.fitWidth,
                           ),
                   ),
                 ),
                 Text(
                   data['tags_name'].toUpperCase(),
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  style: TextStyle(color: Colors.grey[800], fontSize: 20),
                 ),
               ],
             ),

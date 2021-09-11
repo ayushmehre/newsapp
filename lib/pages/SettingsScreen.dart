@@ -45,8 +45,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               margin: EdgeInsets.fromLTRB(0, 20, 16, 0),
               child: Row(
                 children: [
-                  InkWell(onTap: (){Navigator.pop(context);},child: Icon(Icons.arrow_back)),
-                  SizedBox(width: 10,),
+                  InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.arrow_back)),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text(
                     'Settings',
                     style: GoogleFonts.roboto(
@@ -60,9 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 40,
-            ),
+            SizedBox(height: 20),
             Row(
               children: [
                 InkWell(

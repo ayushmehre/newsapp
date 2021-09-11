@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:newsapp/utils/colors.dart';
-import 'package:newsapp/widgets/get_videos_stories.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/story_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/material.dart';
-
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class VideoStoriesFeed extends StatefulWidget {
   @override
@@ -72,7 +68,7 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
               ),
               StoryItem.text(
                 title: "Nice!\n\nTap to continue.",
-                backgroundColor: CustomColors().red ?? Colors.red,
+                backgroundColor: CustomColors().red,
                 textStyle: TextStyle(
                   fontFamily: 'Dancing',
                   fontSize: 40,

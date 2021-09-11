@@ -16,12 +16,12 @@ Widget getVideoStories(BuildContext context, storyController, int likes) {
           storyItems: [
             StoryItem.text(
               title:
-              "I guess you'd love to see more of our food. That's great.",
+                  "I guess you'd love to see more of our food. That's great.",
               backgroundColor: CustomColors().black,
             ),
             StoryItem.text(
               title: "Nice!\n\nTap to continue.",
-              backgroundColor: CustomColors().red ?? Colors.red,
+              backgroundColor: CustomColors().red,
               textStyle: TextStyle(
                 fontFamily: 'Dancing',
                 fontSize: 40,
@@ -29,7 +29,7 @@ Widget getVideoStories(BuildContext context, storyController, int likes) {
             ),
             StoryItem.pageImage(
               url:
-              "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
+                  "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
               caption: "Still sampling",
               controller: storyController,
             ),
@@ -79,10 +79,12 @@ Widget getVideoStories(BuildContext context, storyController, int likes) {
                   children: [
                     Text(
                       "$likes",
-                      style: TextStyle(color: CustomColors().white, fontSize: 20),
+                      style:
+                          TextStyle(color: CustomColors().white, fontSize: 20),
                     ),
                     SizedBox(width: 4),
-                    Icon(isLiked ? Icons.thumb_down: Icons.thumb_up, color: CustomColors().white),
+                    Icon(isLiked ? Icons.thumb_down : Icons.thumb_up,
+                        color: CustomColors().white),
                   ],
                 ),
               ),

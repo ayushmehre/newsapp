@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,20 +8,20 @@ import 'package:newsapp/pages/VideoStoriesFeed.dart';
 import 'package:newsapp/utils/colors.dart';
 
 class NewsStoryItemWidget extends StatefulWidget {
-
   NewsStoryObject newsStoryObject;
   int index;
   bool showNumber;
 
-  NewsStoryItemWidget(this.newsStoryObject,{this.index=0,this.showNumber=false});
+  NewsStoryItemWidget(this.newsStoryObject,
+      {this.index = 0, this.showNumber = false});
 
   @override
   _NewsStoryItemWidgetState createState() => _NewsStoryItemWidgetState();
 }
 
 class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
-
-  String image="https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80";
+  String image =
+      "https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80";
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
         InkWell(
           onTap: () {
             Navigator.push(
-              context!,
+              context,
               MaterialPageRoute(builder: (context) => VideoStoriesFeed()),
             );
           },
@@ -47,7 +46,7 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
                     alignment: Alignment.center,
                     width: 34,
                     child: Text(
-                      (widget.index+1).toString(),
+                      (widget.index + 1).toString(),
                       style: TextStyle(
                         fontSize: 65,
                         color: CustomColors().black,
@@ -57,7 +56,7 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context!).size.width - 55,
+                  width: MediaQuery.of(context).size.width - 55,
                   child: Column(
                     children: [
                       buildImage(),
@@ -96,24 +95,24 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
           height: 1.1,
         ),
       ),
-);
+    );
   }
 
   Container buildTitle() {
     return Container(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          widget.newsStoryObject.title.toString(),
-          maxLines: 2,
-          style: GoogleFonts.roboto(
-            textStyle: TextStyle(
-              fontSize: 26,
-              color: CustomColors().black,
-              fontWeight: FontWeight.w900,
-            ),
+      alignment: Alignment.centerLeft,
+      child: Text(
+        widget.newsStoryObject.title.toString(),
+        maxLines: 2,
+        style: GoogleFonts.roboto(
+          textStyle: TextStyle(
+            fontSize: 26,
+            color: CustomColors().black,
+            fontWeight: FontWeight.w900,
           ),
         ),
-      );
+      ),
+    );
   }
 
   Container buildImage() {

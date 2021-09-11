@@ -61,3 +61,9 @@ Text subTitleWidget(String text, double fs, Color color) {
     ),
   );
 }
+
+Center customProgressIndicator(){
+  return Center(
+    child: CircularProgressIndicator(color: CustomColors().red,),
+  );
+}

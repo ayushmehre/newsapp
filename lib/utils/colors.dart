@@ -13,5 +13,5 @@ class CustomColors {
   Color removeButtonColor = HexColor('#4021242f').withOpacity(0.4);
   Color errorRedColor = HexColor("#ab0000");
   Color blue = HexColor("#2872ba");
-  Color? red = Colors.red[600];
+  Color red = Colors.red[600]??Colors.red;
 }

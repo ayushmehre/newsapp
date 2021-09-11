@@ -6,8 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:newsapp/dummy/login_view.dart';
 import 'package:newsapp/models/UserObject.dart';
 import 'package:newsapp/pages/LoginPage.dart';
+import 'package:newsapp/pages/SettingsScreen.dart';
 import 'package:newsapp/utils/UserUtils.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserAccount extends StatefulWidget {
   const UserAccount({Key? key}) : super(key: key);
@@ -17,7 +19,7 @@ class UserAccount extends StatefulWidget {
 }
 
 class _UserAccountState extends State<UserAccount> {
-
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   UserObject? currentUser;
 
   handleLogout() {
@@ -43,36 +45,41 @@ class _UserAccountState extends State<UserAccount> {
             SizedBox(height: 20),
             Container(
               margin: EdgeInsets.fromLTRB(16, 20, 16, 40),
-              child: Text(
-                currentUser?.name ?? 'User Account',
-                style: GoogleFonts.roboto(
-                  textStyle: TextStyle(
-                    fontSize: 44,
-                    color: CustomColors().black,
-                    fontWeight: FontWeight.w700,
+              child: Column(
+                children: [
+                  Text(
+                    currentUser?.name ?? 'User Account',
+                    style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                        fontSize: 44,
+                        color: CustomColors().black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                width: MediaQuery.of(context).size.width - 16,
-                child: Text(
-                  'Personal Profile',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: CustomColors().black,
-                    fontWeight: FontWeight.w500,
+                  Text(
+                    currentUser?.email ?? 'User Email',
+                    style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                        fontSize: 16,
+                        color: CustomColors().grey,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
 
-            //
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsScreen(),
+                  ),
+                );
+              },
               child: Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 width: MediaQuery.of(context).size.width - 16,
@@ -94,7 +101,37 @@ class _UserAccountState extends State<UserAccount> {
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 width: MediaQuery.of(context).size.width - 16,
                 child: Text(
-                  'Contact Us',
+                  'Share App',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: CustomColors().black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                width: MediaQuery.of(context).size.width - 16,
+                child: Text(
+                  'About Us',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: CustomColors().black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                width: MediaQuery.of(context).size.width - 16,
+                child: Text(
+                  'Rate the App',
                   style: TextStyle(
                     fontSize: 18,
                     color: CustomColors().black,
@@ -107,7 +144,12 @@ class _UserAccountState extends State<UserAccount> {
             //
             InkWell(
               onTap: () {
-                handleLogout();
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return buildLogoutAlertDialog(context);
+                    });
+                // handleLogout();
               },
               child: Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -125,6 +167,26 @@ class _UserAccountState extends State<UserAccount> {
           ],
         ),
       ),
+    );
+  }
+
+  AlertDialog buildLogoutAlertDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text('Are you sure to logout'),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text("Cancel"),
+        ),
+        FlatButton(
+          onPressed: () {
+            setState(() {
+              handleLogout();
+            });
+          },
+          child: Text("Logout"),
+        ),
+      ],
     );
   }
 }

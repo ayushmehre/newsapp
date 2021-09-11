@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:newsapp/dummy/home_screen.dart';
+import 'package:newsapp/pages/HomePage.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/widgets.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({Key? key}) : super(key: key);
@@ -13,20 +17,26 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen> {
   List listData = [];
+  bool boolsearch_height=false;
 
   @override
   void initState() {
+    super.initState();
+    getCategory();
+  }
+
+  getCategory(){
     API().getCategories((code, response) async {
       setState(() {
         listData = response["data"];
       });
       print(listData);
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -44,9 +54,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
             children: [
               SizedBox(height: 20),
               Container(
-                margin: EdgeInsets.fromLTRB(16, 20, 16, 10),
+                margin: EdgeInsets.fromLTRB(0, 20, 16, 0),
                 child: Text(
-                  'Explore More',
+                  'Search',
                   style: GoogleFonts.roboto(
                     textStyle: TextStyle(
                       fontSize: 44,
@@ -56,10 +66,32 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                 ),
               ),
-              listData == []
-                  ? Container()
-                  : gridWidgetDashboard(width, context, listData),
-              SizedBox(height: 80),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: boolsearch_height?300:100,
+                    child:  buildSearchBar(isPortrait),
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Text(
+                      'Category',
+                      style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  listData == []
+                      ? Container(height:MediaQuery.of(context).size.height,child: customProgressIndicator(),)
+                      : buildCategory(width, context, listData),
+                  SizedBox(height: 80),
+                ],
+              ),
             ],
           ),
         ),
@@ -67,7 +99,64 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  GridView gridWidgetDashboard(
+  Widget buildSearchBar(isPortrait){
+    return FloatingSearchBar(
+        hint: 'Search...',
+        elevation: 0,
+        backgroundColor: Colors.grey[100],
+        scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+        transitionDuration: const Duration(milliseconds: 800),
+        transitionCurve: Curves.easeInOut,
+        physics: const BouncingScrollPhysics(),
+        axisAlignment: isPortrait ? 0.0 : -1.0,
+        openAxisAlignment: 0.0,
+        width: MediaQuery.of(context).size.width,
+        debounceDelay: const Duration(milliseconds: 500),
+        onQueryChanged: (query) {
+          // Call your model, bloc, controller here.
+          // setState(() {
+          //   boolsearch_height=true;
+          // });
+        },
+        // Specify a custom transition to be used for
+        // animating between opened and closed stated.
+        transition: CircularFloatingSearchBarTransition(),
+        actions: [
+          FloatingSearchBarAction(
+            showIfOpened: false,
+            child: CircularButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                setState(() {
+                  boolsearch_height=false;
+                });
+              },
+            ),
+          ),
+          FloatingSearchBarAction.searchToClear(
+            showIfClosed: false,
+          ),
+        ],
+        backdropColor: CustomColors().white,
+        builder: (context, transition) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Material(
+              color: Colors.white,
+              elevation: 4.0,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: Colors.accents.map((color) {
+                  return Container(height: 112, color: color);
+                }).toList(),
+              ),
+            ),
+          );
+        }
+    );
+  }
+
+  GridView buildCategory(
     double width,
     BuildContext context,
     List<dynamic> listOfLocation1,
@@ -91,12 +180,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
         return MaterialButton(
           padding: EdgeInsets.all(0),
           minWidth: width,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context!,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          },
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                color: CustomColors().grey),
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.grey[400]),
             child: Column(
               children: [
                 Container(
@@ -107,20 +201,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     borderRadius: BorderRadius.circular(50.0),
                     child: data['image_link'] == null
                         ? Container(
-                            color: Colors.white30,
+                            color: Colors.grey[500],
                           )
                         : Image.network(
                             data['image_link'] == null
                                 ? 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Z2lybCUyMGZhY2V8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'
                                 : data['image_link'],
-                            height: 50,
+                            height: 30,
                             fit: BoxFit.fitWidth,
                           ),
                   ),
                 ),
                 Text(
                   data['tags_name'].toUpperCase(),
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  style: TextStyle(color: Colors.grey[800], fontSize: 20),
                 ),
               ],
             ),

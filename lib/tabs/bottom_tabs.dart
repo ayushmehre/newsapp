@@ -26,7 +26,7 @@ class _BottomTabsState extends State<BottomTabs> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.09),
             spreadRadius: 1.0,
             blurRadius: 30.0,
           )
@@ -50,7 +50,7 @@ class _BottomTabsState extends State<BottomTabs> {
             },
           ),
           BottomTabBtn(
-            imagePath: Icons.explore,
+            imagePath: Icons.search,
             selected: _selectedTab == 2 ? true : false,
             onPressed: () {
               widget.tabPressed(2);
@@ -100,7 +100,7 @@ class BottomTabBtn extends StatelessWidget {
           border: Border(
             top: BorderSide(
               color: _selected
-                  ? Theme.of(context).accentColor
+                  ? CustomColors().red
                   : Colors.transparent,
               width: 2.0,
             ),

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:newsapp/pages/HomePage.dart';
+import 'package:newsapp/pages/CategoryFeedScreen.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:newsapp/widgets/widgets.dart';
@@ -183,14 +183,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              MaterialPageRoute(
+                builder: (context) => CategoryFeedScreen(
+                  categoryName: data['tags_name'].toUpperCase(),
+                ),
+              ),
             );
           },
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.grey[400]),
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.grey[400],
+            ),
             child: Column(
               children: [
                 Container(

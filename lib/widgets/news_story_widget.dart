@@ -9,11 +9,16 @@ import 'package:newsapp/utils/colors.dart';
 
 class NewsStoryItemWidget extends StatefulWidget {
   NewsStoryObject newsStoryObject;
+  List<NewsStoryObject> newsStoryObjectList;
   int index;
   bool showNumber;
 
-  NewsStoryItemWidget(this.newsStoryObject,
-      {this.index = 0, this.showNumber = false});
+  NewsStoryItemWidget(
+    this.newsStoryObject, {
+    this.index = 0,
+    required this.newsStoryObjectList,
+    this.showNumber = false,
+  });
 
   @override
   _NewsStoryItemWidgetState createState() => _NewsStoryItemWidgetState();
@@ -25,13 +30,35 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Column(
       children: [
         InkWell(
           onTap: () {
+            List<NewsStoryObject> mylist = [];
+            List<NewsStoryObject> mylist2 = [];
+            for (NewsStoryObject temp in widget.newsStoryObjectList) {
+              if (widget.newsStoryObject.storyId == temp.storyId) {
+                mylist.add(temp);
+              } else {
+                mylist2.add(temp);
+              }
+            }
+            mylist.addAll(mylist2);
+
+            // for (NewsStoryObject temp in widget.newsStoryObjectList) {
+            //   if (widget.newsStoryObject.storyId != temp.storyId) {
+            //     mylist.add(temp);
+            //   }
+            // }
+
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VideoStoriesFeed()),
+              MaterialPageRoute(
+                builder: (context) => VideoStoriesFeed(
+                  newsStoryObjectList: mylist,
+                ),
+              ),
             );
           },
           child: Container(
@@ -56,7 +83,7 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width - 55,
+                  width: widget.showNumber ? width - 55 : width - 38,
                   child: Column(
                     children: [
                       buildImage(),

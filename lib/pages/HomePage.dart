@@ -1,22 +1,17 @@
 import 'dart:io';
 
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/pages/CreateNewsStoryPage.dart';
-import 'package:newsapp/dummy/AddVideo.dart';
-import 'package:newsapp/pages/LoginPage.dart';
-import 'package:newsapp/pages/VideoStoriesFeed.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
-import 'package:newsapp/widgets/newslist_widget.dart';
+import 'package:newsapp/widgets/news_list_widget.dart';
 import 'package:newsapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter_video_info/flutter_video_info.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -30,38 +25,37 @@ class _HomeScreenState extends State<HomeScreen> {
   final videoInfo = FlutterVideoInfo();
   late File _file;
   final selected = ImagePicker();
-  late bool boolfeedsload=false;
-  late List<NewsStoryObject> feedList=[];
+  late bool boolfeedsload = false;
+  late List<NewsStoryObject> feedList = [];
 
   @override
   void initState() {
     super.initState();
     getHomePageStoriesFeeds();
-
   }
 
-  getHomePageStoriesFeeds()async {
-    Map<String,dynamic> response= await API().getNewsStory();
-    if(!response.isEmpty){
-      if(response["success"]){
-        List<NewsStoryObject> tmpList=[];
-        for(var dctData in response["data"]){
+  getHomePageStoriesFeeds() async {
+    Map<String, dynamic> response = await API().getNewsStory();
+    if (!response.isEmpty) {
+      if (response["success"]) {
+        List<NewsStoryObject> tmpList = [];
+        for (var dctData in response["data"]) {
           NewsStoryObject feedObj = NewsStoryObject.fromJson(dctData);
           tmpList.add(feedObj);
         }
         setState(() {
-          feedList=tmpList;
-          boolfeedsload=true;
+          feedList = tmpList;
+          boolfeedsload = true;
         });
         print(feedList.toString());
-      }else{
+      } else {
         setState(() {
-          boolfeedsload=true;
+          boolfeedsload = true;
         });
       }
-    }else{
+    } else {
       setState(() {
-        boolfeedsload=true;
+        boolfeedsload = true;
       });
     }
   }
@@ -75,19 +69,22 @@ class _HomeScreenState extends State<HomeScreen> {
         _file = File(selectedImage.path);
         VideoPlayerController.file(File(selectedImage.path));
 
-        var endDuration = (a!.duration)!/1000 <= 60;
-        var startDuration = (a.duration)!/1000 >= 10;
+        var endDuration = (a!.duration)! / 1000 <= 60;
+        var startDuration = (a.duration)! / 1000 >= 10;
         var filelength = (_file.lengthSync() / 1024 / 1024) <= 50;
-        if(!startDuration) {
-          showErrorDialog(context, "Error", "Please select file greater then 10 seconds");
+        if (!startDuration) {
+          showErrorDialog(
+              context, "Error", "Please select file greater then 10 seconds");
           return;
         }
-        if(!endDuration) {
-          showErrorDialog(context, "Error", "Please select file less then 60 seconds");
+        if (!endDuration) {
+          showErrorDialog(
+              context, "Error", "Please select file less then 60 seconds");
           return;
         }
-        if(!filelength) {
-          showErrorDialog(context, "Error", "File size should not be greater then 50MB");
+        if (!filelength) {
+          showErrorDialog(
+              context, "Error", "File size should not be greater then 50MB");
           return;
         }
 
@@ -133,17 +130,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            boolfeedsload?Container(
-              child: feedList.length==0?Container(
-                child: Center(child: Text("Error")),
-              ):Container(
-                height: MediaQuery.of(context).size.height-180,
-                child: NewsListWidget(feedList,showNumber: true,),
-              ),
-            ):Container(
-              height: MediaQuery.of(context).size.height,
-              child: customProgressIndicator(),
-            )
+            boolfeedsload
+                ? Container(
+                    child: feedList.length == 0
+                        ? Container(
+                            child: Center(child: Text("Error")),
+                          )
+                        : Container(
+                            height: MediaQuery.of(context).size.height - 180,
+                            child: NewsListWidget(
+                              feedList,
+                              showNumber: true,
+                            ),
+                          ),
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height / 1.4,
+                    child: customProgressIndicator(),
+                  )
             // for (var i = 0; i < 10; i++)
             //   listComponent(
             //     index: (i + 1).toString(),
@@ -164,9 +168,11 @@ class _HomeScreenState extends State<HomeScreen> {
           getImage();
         },
         backgroundColor: CustomColors().red,
-        child: Icon(Icons.add,size: 40,),
+        child: Icon(
+          Icons.add,
+          size: 40,
+        ),
       ),
     );
   }
 }
-

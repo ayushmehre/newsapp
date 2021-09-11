@@ -1,16 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/story_view.dart';
 
 class VideoStoriesFeed extends StatefulWidget {
+  List<NewsStoryObject> newsStoryObjectList;
+
+  VideoStoriesFeed({required this.newsStoryObjectList});
   @override
   _VideoStoriesFeedState createState() => _VideoStoriesFeedState();
 }
 
 class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
+  PageController _controller = PageController(initialPage: 0);
   final storyController = StoryController();
   int likes = 0;
   bool isLiked = false;
@@ -35,7 +40,7 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: PageView.builder(
-        itemCount: 10,
+        itemCount: widget.newsStoryObjectList.length,
         scrollDirection: Axis.vertical,
         onPageChanged: (index) {
           // changeVideo(index);
@@ -44,63 +49,51 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
           });
         },
         itemBuilder: (context, index) {
-          return Container(
-            child: getVideoStories(context),
+          return PageView(
+            controller: _controller,
+            children: widget.newsStoryObjectList.map((e) {
+              return Container(
+                child: getVideoStories(context, e, index),
+              );
+            }).toList(),
           );
         },
       ),
     );
   }
 
-  Widget getVideoStories(BuildContext context) {
+  Widget getVideoStories(
+    BuildContext context,
+    NewsStoryObject newsStoryData,
+    int index,
+  ) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final title = newsStoryData.title;
+    print('\n\n \n\n widget.newsStoryObjectList:> $title \n\n \n\n');
     return Column(
       children: [
         Container(
           height: height - 50,
           child: StoryView(
             storyItems: [
-              StoryItem.text(
-                title:
-                    "I guess you'd love to see more of our food. That's great.",
-                backgroundColor: CustomColors().black,
-              ),
-              StoryItem.text(
-                title: "Nice!\n\nTap to continue.",
-                backgroundColor: CustomColors().red,
-                textStyle: TextStyle(
-                  fontFamily: 'Dancing',
-                  fontSize: 40,
-                ),
-              ),
-              StoryItem.pageImage(
-                url:
-                    "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
-                caption: "Still sampling",
-                controller: storyController,
-              ),
-              StoryItem.pageImage(
-                url: "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-                caption: "Working with gifs",
-                controller: storyController,
-                shown: false,
-              ),
+              // StoryItem.text(
+              //   title: "${newsStoryData.videoLink}",
+              //   backgroundColor: CustomColors().red,
+              //   textStyle: TextStyle(
+              //     fontFamily: 'Dancing',
+              //     fontSize: 40,
+              //   ),
+              // ),
               StoryItem.pageImage(
                 url:
                     "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
-                caption: "Hello, from the other side",
-                controller: storyController,
-              ),
-              StoryItem.pageImage(
-                url:
-                    "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
-                caption: "Hello, from the other side2",
+                caption: title,
                 controller: storyController,
               ),
             ],
             onStoryShow: (s) {
-              print("Showing a story");
+              print("Showing a story ${s}");
             },
             onComplete: () {
               print("Completed a cycle");

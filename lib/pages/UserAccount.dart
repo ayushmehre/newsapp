@@ -19,7 +19,6 @@ class UserAccount extends StatefulWidget {
 }
 
 class _UserAccountState extends State<UserAccount> {
-
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   UserObject? currentUser;
 
@@ -145,7 +144,12 @@ class _UserAccountState extends State<UserAccount> {
             //
             InkWell(
               onTap: () {
-                handleLogout();
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return buildLogoutAlertDialog(context);
+                    });
+                // handleLogout();
               },
               child: Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -163,6 +167,26 @@ class _UserAccountState extends State<UserAccount> {
           ],
         ),
       ),
+    );
+  }
+
+  AlertDialog buildLogoutAlertDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text('Are you sure to logout'),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text("Cancel"),
+        ),
+        FlatButton(
+          onPressed: () {
+            setState(() {
+              handleLogout();
+            });
+          },
+          child: Text("Logout"),
+        ),
+      ],
     );
   }
 }

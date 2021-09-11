@@ -13,6 +13,7 @@ import 'package:newsapp/pages/LoginPage.dart';
 import 'package:newsapp/pages/VideoStoriesFeed.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/newslist_widget.dart';
 import 'package:newsapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late File _file;
   final selected = ImagePicker();
   late bool boolfeedsload=false;
-  late List<NewsStoryObject> Feedlist=[];
+  late List<NewsStoryObject> feedList=[];
 
   @override
   void initState() {
@@ -49,10 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
           tmpList.add(feedObj);
         }
         setState(() {
-          Feedlist=tmpList;
+          feedList=tmpList;
           boolfeedsload=true;
         });
-        print(Feedlist.toString());
+        print(feedList.toString());
       }else{
         setState(() {
           boolfeedsload=true;
@@ -133,25 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             boolfeedsload?Container(
-              child: Feedlist.length==0?Container(
+              child: feedList.length==0?Container(
                 child: Center(child: Text("Error")),
               ):Container(
                 height: MediaQuery.of(context).size.height-180,
-                child: ListView.builder(
-                    itemCount: Feedlist.length,
-                    itemBuilder: (context,index){
-                      return  listComponent(
-                            index: (index + 1).toString(),
-                            context: context,
-                            title: Feedlist[index].title,
-                            info: Feedlist[index].descption,
-                            comments: Feedlist[index].commentsCount.toString(),
-                            views: Feedlist[index].viewCount.toString(),
-                            image:
-                                "https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-                          );
-                    }
-                ),
+                child: NewsListWidget(feedList,showNumber: true,),
               ),
             ):Container(
               height: MediaQuery.of(context).size.height,
@@ -183,107 +170,3 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Column listComponent({
-  BuildContext? context,
-  String? title,
-  String? info,
-  String? comments,
-  String? views,
-  String? image,
-  String? index,
-}) {
-  return Column(
-    children: [
-      InkWell(
-        onTap: () {
-          Navigator.push(
-            context!,
-            MaterialPageRoute(builder: (context) => VideoStoriesFeed()),
-          );
-        },
-        child: Container(
-          margin: EdgeInsets.fromLTRB(8, 0, 0, 0),
-          padding: EdgeInsets.fromLTRB(6, 20, 0, 20),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                width: 34,
-                child: Text(
-                  index!,
-                  style: TextStyle(
-                    fontSize: 65,
-                    color: CustomColors().black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context!).size.width - 55,
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Image(
-                          image: NetworkImage(image!),
-                          width: double.infinity,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              title!,
-                              maxLines: 2,
-                              style: GoogleFonts.roboto(
-                                textStyle: TextStyle(
-                                  fontSize: 26,
-                                  color: CustomColors().black,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            info!,
-                            maxLines: 2,
-                            style: GoogleFonts.abel(
-                              textStyle: TextStyle(
-                                fontSize: 16,
-                                color: CustomColors().black,
-                                fontWeight: FontWeight.w400,
-                                height: 1.1,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: CustomColors().white,
-          border: Border(
-            bottom: BorderSide(color: CustomColors().bordercolor, width: 1),
-          ),
-        ),
-      )
-    ],
-  );
-}

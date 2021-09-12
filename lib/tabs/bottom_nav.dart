@@ -15,7 +15,6 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
-  static bool isNavbarVisible = true;
   late final ScrollListener _model;
   late final ScrollController _controller;
   final double _bottomNavBarHeight = 56;
@@ -66,24 +65,21 @@ class _BottomNavState extends State<BottomNav> {
                   ),
                   Container(color: Colors.black,height: 20,child:
                     Text(_model.bottom.toString(),style: TextStyle(color: Colors.white),),),
-                  Visibility(
-                    visible: isNavbarVisible,
-                    child: Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: _model.bottom,
-                      child: SizedBox(
-                        height: _bottomNavBarHeight,
-                        child: BottomTabs(
-                          selectedTab: _selectedTab,
-                          tabPressed: (num) {
-                            _tabsPagesController.animateToPage(
-                              num,
-                              duration: Duration(microseconds: 300),
-                              curve: Curves.easeInCubic,
-                            );
-                          },
-                        ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: _model.bottom,
+                    child: SizedBox(
+                      height: _bottomNavBarHeight,
+                      child: BottomTabs(
+                        selectedTab: _selectedTab,
+                        tabPressed: (num) {
+                          _tabsPagesController.animateToPage(
+                            num,
+                            duration: Duration(microseconds: 300),
+                            curve: Curves.easeInCubic,
+                          );
+                        },
                       ),
                     ),
                   )

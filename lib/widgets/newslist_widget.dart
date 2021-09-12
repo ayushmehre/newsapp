@@ -4,7 +4,8 @@ import 'package:newsapp/utils/colors.dart';
 import 'package:newsapp/widgets/scroll_listener.dart';
 import 'package:newsapp/tabs/bottom_nav.dart';
 
-import 'newsstory_widget.dart';
+import 'news_story_widget.dart';
+// import 'newsstory_widget.dart';
 
 class NewsListWidget extends StatefulWidget {
   late List<NewsStoryObject> feedList;
@@ -18,12 +19,12 @@ class NewsListWidget extends StatefulWidget {
 
 class _NewsListWidgetState extends State<NewsListWidget> {
   late final ScrollController _controller;
-  late final ScrollListener _model;
+  late final ScrollListener _model2;
 
   @override
   void initState() {
     _controller = ScrollController();
-    _model = ScrollListener.initialise(_controller);
+    _model2 = ScrollListener.initialise(_controller);
     super.initState();
   }
 
@@ -44,7 +45,7 @@ class _NewsListWidgetState extends State<NewsListWidget> {
         itemCount: widget.feedList.length,
         itemBuilder: (context, index) {
           return NewsStoryItemWidget(widget.feedList[index],
-              index: index, showNumber: widget.showNumber);
+              index: index, showNumber: widget.showNumber, newsStoryObjectList: [],);
         });
   }
 }

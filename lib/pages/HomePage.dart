@@ -117,19 +117,10 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(16, 20, 0, 16),
-              child: Text(
-                'Trending Now',
-                style: GoogleFonts.roboto(
-                  textStyle: TextStyle(
-                    fontSize: 44,
-                    color: CustomColors().black,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   margin: EdgeInsets.fromLTRB(16, 20, 0, 16),
+            //   child: buildTitle(),
+            // ),
             boolfeedsload
                 ? Container(
                     child: feedList.length == 0
@@ -137,11 +128,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Center(child: Text("Error")),
                           )
                         : Container(
-                            height: MediaQuery.of(context).size.height - 180,
-                            child: NewsListWidget(
-                              feedList,
-                              showNumber: true,
-                            ),
+                            height: MediaQuery.of(context).size.height - 100,
+                            child: NewsListWidget(feedList,
+                                showNumber: true,
+                                scrollPhysics: NeverScrollableScrollPhysics(),
+                                title: buildTitle()),
                           ),
                   )
                 : Container(
@@ -171,6 +162,19 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(
           Icons.add,
           size: 40,
+        ),
+      ),
+    );
+  }
+
+  Text buildTitle() {
+    return Text(
+      'Trending Now',
+      style: GoogleFonts.roboto(
+        textStyle: TextStyle(
+          fontSize: 44,
+          color: CustomColors().black,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );

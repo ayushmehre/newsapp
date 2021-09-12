@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newsapp/dummy/NavbarScrollHide.dart';
 import 'package:newsapp/models/UserObject.dart';
+import 'package:newsapp/utils/UserUtils.dart';
 import 'package:newsapp/widgets/open_web_view.dart';
 import 'package:newsapp/pages/LoginPage.dart';
 import 'package:newsapp/pages/SettingsScreen.dart';
@@ -23,6 +25,18 @@ class UserAccount extends StatefulWidget {
 class _UserAccountState extends State<UserAccount> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   UserObject? currentUser;
+
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUserDetails();
+  }
+  getCurrentUserDetails()async{
+    setState(() async {
+      currentUser = await UserUtils.getCurrentUser();
+    });
+  }
 
   fetchPrefs() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -62,11 +76,20 @@ class _UserAccountState extends State<UserAccount> {
           children: [
             SizedBox(height: 20),
             buildUserDetails(),
+
+            buildCards(context, 'My Uploaded Videos', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OpenWebView("https://play.google.com/store/apps/details?id=com.flutter.homeguruji_2021_6","Rate App"),
+                ),
+              );
+            }),
             buildCards(context, "Settings", () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SettingsScreen(),
+                  builder: (context) => NavbarScrollHide(),
                 ),
               );
             }),
@@ -91,6 +114,7 @@ class _UserAccountState extends State<UserAccount> {
                 ),
               );
             }),
+
             buildCards(context, 'Logout', () {
               showDialog(
                   context: context,
@@ -137,7 +161,7 @@ class _UserAccountState extends State<UserAccount> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            currentUser?.name?? 'User Account',
+            currentUser?.name?.toString()?? 'Account',
             style: GoogleFonts.roboto(
               textStyle: TextStyle(
                 fontSize: 44,
@@ -147,7 +171,7 @@ class _UserAccountState extends State<UserAccount> {
             ),
           ),
           Text(
-            currentUser?.email ?? 'User Email',
+            currentUser?.email?.toString() ?? 'Email',
             style: GoogleFonts.roboto(
               textStyle: TextStyle(
                 fontSize: 16,

@@ -2,18 +2,16 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newsapp/dummy/NavbarScrollHide.dart';
-import 'package:newsapp/dummy/login_view.dart';
 import 'package:newsapp/models/UserObject.dart';
 import 'package:newsapp/widgets/open_web_view.dart';
 import 'package:newsapp/pages/LoginPage.dart';
 import 'package:newsapp/pages/SettingsScreen.dart';
-import 'package:newsapp/utils/UserUtils.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_share/flutter_share.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+// import 'package:webview_flutter/webview_flutter.dart';
 
 class UserAccount extends StatefulWidget {
   const UserAccount({Key? key}) : super(key: key);
@@ -45,14 +43,16 @@ class _UserAccountState extends State<UserAccount> {
       print(e.message);
     }
   }
-  Future<void> share() async {
+
+  Future<void> _onShareData() async {
     await FlutterShare.share(
-        title: 'Example share',
-        text: 'Example share text',
-        linkUrl: 'https://flutter.dev/',
-        chooserTitle: 'Example Chooser Title'
+      title: 'Example share',
+      text: 'Example share text',
+      linkUrl: 'https://flutter.dev/',
+      chooserTitle: 'Example Chooser Title',
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,13 +66,13 @@ class _UserAccountState extends State<UserAccount> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NavbarScrollHide(),
+                  builder: (context) => SettingsScreen(),
                 ),
               );
             }),
             buildCards(context, "Share App", () {
               print("Share");
-              share();
+              _onShareData();
             }),
             buildCards(context, "About Us", () {
               Navigator.push(
@@ -163,7 +163,7 @@ class _UserAccountState extends State<UserAccount> {
 
   AlertDialog buildLogoutAlertDialog(BuildContext context) {
     return AlertDialog(
-      title: Text('Are you sure to logout'),
+      title: Text('Are you sure you want to logout?'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context),

@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:newsapp/dummy/home_screen.dart';
-import 'package:newsapp/pages/HomePage.dart';
+import 'package:newsapp/pages/CategoryFeedScreen.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:newsapp/widgets/widgets.dart';
@@ -17,17 +16,20 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen> {
   List listData = [];
-  bool boolsearch_height=false;
+  bool boolsearch_height = false;
+  bool isloading = false;
 
   @override
   void initState() {
+    isloading = true;
     super.initState();
     getCategory();
   }
 
-  getCategory(){
+  getCategory() {
     API().getCategories((code, response) async {
       setState(() {
+        isloading = false;
         listData = response["data"];
       });
       print(listData);
@@ -36,7 +38,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -52,17 +55,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20),
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 20, 16, 0),
-                child: Text(
-                  'Search',
-                  style: GoogleFonts.roboto(
-                    textStyle: TextStyle(
-                      fontSize: 44,
-                      color: CustomColors().black,
-                      fontWeight: FontWeight.w700,
-                    ),
+              SizedBox(height: 40),
+              Text(
+                'Search',
+                style: GoogleFonts.roboto(
+                  textStyle: TextStyle(
+                    fontSize: 44,
+                    color: CustomColors().black,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
@@ -70,24 +70,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: boolsearch_height?300:100,
-                    child:  buildSearchBar(isPortrait),
+                    height: boolsearch_height ? 300 : 100,
+                    child: buildSearchBar(isPortrait),
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: Text(
-                      'Category',
-                      style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
-                          fontSize: 24,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Category',
+                    style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                        fontSize: 24,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                  listData == []
-                      ? Container(height:MediaQuery.of(context).size.height,child: customProgressIndicator(),)
+                  isloading
+                      ? Container(
+                          height: MediaQuery.of(context).size.height / 2,
+                          child: customProgressIndicator(),
+                        )
                       : buildCategory(width, context, listData),
                   SizedBox(height: 80),
                 ],
@@ -99,7 +100,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  Widget buildSearchBar(isPortrait){
+  Widget buildSearchBar(isPortrait) {
     return FloatingSearchBar(
         hint: 'Search...',
         elevation: 0,
@@ -128,7 +129,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               icon: const Icon(Icons.search),
               onPressed: () {
                 setState(() {
-                  boolsearch_height=false;
+                  boolsearch_height = false;
                 });
               },
             ),
@@ -152,8 +153,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               ),
             ),
           );
-        }
-    );
+        });
   }
 
   GridView buildCategory(
@@ -182,15 +182,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
           minWidth: width,
           onPressed: () {
             Navigator.push(
-              context!,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryFeedScreen(
+                  categoryName: data['tags_name'].toUpperCase(),
+                ),
+              ),
             );
           },
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.grey[400]),
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.grey[400],
+            ),
             child: Column(
               children: [
                 Container(
@@ -223,5 +228,4 @@ class _ExploreScreenState extends State<ExploreScreen> {
       }).toList(),
     );
   }
-
 }

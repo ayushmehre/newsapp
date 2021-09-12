@@ -1,12 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:newsapp/dummy/home_screen.dart';
-import 'package:newsapp/pages/HomePage.dart';
-import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:newsapp/widgets/custom_toggle_switch.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -55,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             buildDarkMode(context),
             Divider()
           ]),
-        )));
+        ),),);
   }
 
   Row buildDarkMode(BuildContext context) {

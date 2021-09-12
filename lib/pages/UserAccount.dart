@@ -3,6 +3,7 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newsapp/dummy/NavbarScrollHide.dart';
 import 'package:newsapp/dummy/login_view.dart';
 import 'package:newsapp/models/UserObject.dart';
 import 'package:newsapp/widgets/open_web_view.dart';
@@ -65,7 +66,7 @@ class _UserAccountState extends State<UserAccount> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SettingsScreen(),
+                  builder: (context) => NavbarScrollHide(),
                 ),
               );
             }),

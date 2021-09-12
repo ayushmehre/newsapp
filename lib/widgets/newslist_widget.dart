@@ -1,23 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/scroll_listener.dart';
+import 'package:newsapp/tabs/bottom_nav.dart';
 
 import 'newsstory_widget.dart';
 
 class NewsListWidget extends StatefulWidget {
   late List<NewsStoryObject> feedList;
   bool showNumber;
-  NewsListWidget(this.feedList,{this.showNumber=false});
+
+  NewsListWidget(this.feedList, {this.showNumber = false});
 
   @override
   _NewsListWidgetState createState() => _NewsListWidgetState();
 }
 
 class _NewsListWidgetState extends State<NewsListWidget> {
+  late final ScrollController _controller;
+  late final ScrollListener _model;
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    _model = ScrollListener.initialise(_controller);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-        separatorBuilder: (context,num){
+        controller: _controller,
+        separatorBuilder: (context, num) {
           return Container(
             decoration: BoxDecoration(
               color: CustomColors().white,
@@ -28,9 +42,9 @@ class _NewsListWidgetState extends State<NewsListWidget> {
           );
         },
         itemCount: widget.feedList.length,
-        itemBuilder: (context,index){
-          return  NewsStoryItemWidget(widget.feedList[index],index:index,showNumber: widget.showNumber);
-        }
-    );
+        itemBuilder: (context, index) {
+          return NewsStoryItemWidget(widget.feedList[index],
+              index: index, showNumber: widget.showNumber);
+        });
   }
 }

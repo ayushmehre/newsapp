@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
-import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:http/http.dart' as http;
 import 'package:newsapp/models/NewsStoryObject.dart';
@@ -31,6 +29,7 @@ class API {
   static var GET_USER_BY_ID_URL = "$BASE_URL/getUserById?user_id=";
   static final CREATE_NEWS_STORY_URL = "$BASE_URL/createNewsStory";
   static final GET_NEWS_STORY_URL = "$BASE_URL/getNewsStories";
+  static final GET_USER_UPLOADED_NEWS = "$BASE_URL/getNewsStoriesByUser?id=";
 
   static var GET_CATEGORIES = "$BASE_URL/getCategories";
 
@@ -204,6 +203,21 @@ class API {
   Future<Map<String, dynamic>> getNewsStory() async {
     // Get All News Story
     Uri getNewsStory = Uri.parse(GET_NEWS_STORY_URL);
+    try {
+      http.Response response = await http.get(getNewsStory);
+      print('\n\n ${jsonDecode(response.body)} \n\n');
+      return jsonDecode(response.body);
+    } catch (e) {
+      print('\n\n Error: $e \n\n');
+      return {};
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserUploadedStory(String userid) async {
+    // Get All News Story
+    var NEW_GET_USER_UPLOADED_NEWS = GET_USER_UPLOADED_NEWS + userid;
+    print('\n\n NEW_GET_USER_UPLOADED_NEWS :> $NEW_GET_USER_UPLOADED_NEWS');
+    Uri getNewsStory = Uri.parse(NEW_GET_USER_UPLOADED_NEWS);
     try {
       http.Response response = await http.get(getNewsStory);
       print('\n\n ${jsonDecode(response.body)} \n\n');

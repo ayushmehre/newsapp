@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newsapp/models/UserObject.dart';
-import 'package:newsapp/widgets/open_web_view.dart';
 import 'package:newsapp/pages/LoginPage.dart';
 import 'package:newsapp/pages/SettingsScreen.dart';
+import 'package:newsapp/pages/UserMyVideosFeed.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/open_web_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_share/flutter_share.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
 class UserAccount extends StatefulWidget {
@@ -70,6 +70,14 @@ class _UserAccountState extends State<UserAccount> {
                 ),
               );
             }),
+            buildCards(context, 'My Videos', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserMyVideosFeed(),
+                ),
+              );
+            }),
             buildCards(context, "Share App", () {
               print("Share");
               _onShareData();
@@ -78,25 +86,31 @@ class _UserAccountState extends State<UserAccount> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => OpenWebView("https://flutter.dev","About Us"),
+                  builder: (context) => OpenWebView(
+                    "https://flutter.dev",
+                    "About Us",
+                  ),
                 ),
               );
             }),
             buildCards(context, 'Rate App', () {
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => OpenWebView("https://play.google.com/store/apps/details?id=com.flutter.homeguruji_2021_6","Rate App"),
+                  builder: (context) => OpenWebView(
+                    "https://play.google.com/store/apps/details?id=com.flutter.homeguruji_2021_6",
+                    "Rate App",
+                  ),
                 ),
               );
             }),
             buildCards(context, 'Logout', () {
               showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return buildLogoutAlertDialog(context);
-                  });
+                context: context,
+                builder: (BuildContext context) {
+                  return buildLogoutAlertDialog(context);
+                },
+              );
             }),
           ],
         ),
@@ -137,7 +151,7 @@ class _UserAccountState extends State<UserAccount> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            currentUser?.name?? 'User Account',
+            currentUser?.name ?? 'User Account',
             style: GoogleFonts.roboto(
               textStyle: TextStyle(
                 fontSize: 44,

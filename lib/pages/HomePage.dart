@@ -148,18 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: MediaQuery.of(context).size.height / 1.4,
                     child: customProgressIndicator(),
                   )
-            // for (var i = 0; i < 10; i++)
-            //   listComponent(
-            //     index: (i + 1).toString(),
-            //     context: context,
-            //     title: 'Taliban takes control over Afghanistan',
-            //     info:
-            //         "Google Fonts provides a wide range of fonts that can be used to improve the fonts of the User Interface",
-            //     comments: "1024",
-            //     views: "100K",
-            //     image:
-            //         "https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            //   ),
           ],
         ),
       ),

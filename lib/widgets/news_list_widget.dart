@@ -7,7 +7,13 @@ import 'news_story_widget.dart';
 class NewsListWidget extends StatefulWidget {
   late List<NewsStoryObject> feedList;
   bool showNumber;
-  NewsListWidget(this.feedList, {this.showNumber = false});
+  Widget title;
+  ScrollPhysics scrollPhysics;
+
+  NewsListWidget(this.feedList,
+      {this.showNumber = false,
+      this.scrollPhysics = const BouncingScrollPhysics(),
+      this.title = const SizedBox()});
 
   @override
   _NewsListWidgetState createState() => _NewsListWidgetState();
@@ -16,26 +22,46 @@ class NewsListWidget extends StatefulWidget {
 class _NewsListWidgetState extends State<NewsListWidget> {
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      separatorBuilder: (context, num) {
-        return Container(
-          decoration: BoxDecoration(
-            color: CustomColors().white,
-            border: Border(
-              bottom: BorderSide(color: CustomColors().bordercolor, width: 1),
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.title == null
+              ? SizedBox()
+              : Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 20, 0, 16),
+                  child: widget.title,
+                ),
+          Container(
+            height: MediaQuery.of(context).size.height-200,
+            child: ListView.separated(
+              primary: false,
+              shrinkWrap: !(widget.scrollPhysics is NeverScrollableScrollPhysics),
+              physics: widget.scrollPhysics,
+              separatorBuilder: (context, num) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: CustomColors().white,
+                    border: Border(
+                      bottom:
+                          BorderSide(color: CustomColors().bordercolor, width: 1),
+                    ),
+                  ),
+                );
+              },
+              itemCount: widget.feedList.length,
+              itemBuilder: (context, index) {
+                return NewsStoryItemWidget(
+                  widget.feedList[index],
+                  newsStoryObjectList: widget.feedList,
+                  index: index,
+                  showNumber: widget.showNumber,
+                );
+              },
             ),
           ),
-        );
-      },
-      itemCount: widget.feedList.length,
-      itemBuilder: (context, index) {
-        return NewsStoryItemWidget(
-          widget.feedList[index],
-          newsStoryObjectList: widget.feedList,
-          index: index,
-          showNumber: widget.showNumber,
-        );
-      },
+        ],
+      ),
     );
   }
 }

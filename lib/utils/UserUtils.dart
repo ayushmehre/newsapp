@@ -13,7 +13,6 @@ class UserUtils {
     String? shstr = sharedPreferences.getString(USER_OBJECT_KEY);
     Map<String, dynamic> userObject = jsonDecode(shstr.toString());
     print("\n\n getCurrentUser: ${UserObject.fromJson(userObject)}");
-    // TODO Check Format Exception Ayush Mehre
     return UserObject.fromJson(userObject);
   }
 

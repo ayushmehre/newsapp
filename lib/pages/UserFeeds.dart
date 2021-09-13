@@ -66,7 +66,7 @@ class _UserFeedsState extends State<UserFeeds> {
             Container(
               margin: EdgeInsets.fromLTRB(16, 20, 0, 16),
               child: Text(
-                'Trending Now',
+                'For You',
                 style: GoogleFonts.roboto(
                   textStyle: TextStyle(
                     fontSize: 44,

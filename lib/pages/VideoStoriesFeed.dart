@@ -52,9 +52,7 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
           return PageView(
             controller: _controller,
             children: widget.newsStoryObjectList.map((e) {
-              return Container(
-                child: getVideoStories(context, e, index),
-              );
+              return getVideoStories(context, e, index);
             }).toList(),
           );
         },

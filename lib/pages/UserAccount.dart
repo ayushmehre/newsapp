@@ -79,7 +79,7 @@ class _UserAccountState extends State<UserAccount> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => UserMyVideosFeed(),
+                  builder: (context) => UserMyVideosFeed(currentUser),
                 ),
               );
             }),

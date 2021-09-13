@@ -6,6 +6,7 @@ import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newsapp/models/NewsStoryObject.dart';
+import 'package:newsapp/models/UserObject.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:newsapp/widgets/user_uploaded_news_widget.dart';
@@ -15,7 +16,10 @@ import 'package:video_player/video_player.dart';
 import 'CreateNewsStoryPage.dart';
 
 class UserMyVideosFeed extends StatefulWidget {
-  const UserMyVideosFeed({Key? key}) : super(key: key);
+
+  UserObject? userObject;
+
+  UserMyVideosFeed(this.userObject);
 
   @override
   _UserMyVideosFeedState createState() => _UserMyVideosFeedState();
@@ -33,7 +37,7 @@ class _UserMyVideosFeedState extends State<UserMyVideosFeed> {
   @override
   void initState() {
     super.initState();
-    getHomePageStoriesFeeds();
+    getUserStoriesFeeds();
   }
 
   Future getImage() async {
@@ -80,11 +84,11 @@ class _UserMyVideosFeedState extends State<UserMyVideosFeed> {
     });
   }
 
-  getHomePageStoriesFeeds() async {
+  getUserStoriesFeeds() async {
     setState(() {
       isloading = true;
     });
-    Map<String, dynamic> response = await API().getUserUploadedStory("1");
+    Map<String, dynamic> response = await API().getUserUploadedStory(widget.userObject!.userId.toString());
     print(response);
     if (response.length != 0) {
       if (response["success"]) {

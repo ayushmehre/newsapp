@@ -30,8 +30,7 @@ class _UserUploadedVideosWidgetState extends State<UserUploadedVideosWidget> {
           views: widget.feedList[index].viewCount.toString(),
           shares: widget.feedList[index].shareCount.toString(),
           index: index,
-          image:
-              "https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
+          image:widget.feedList[index].thumLink,
         );
       },
     );
@@ -145,6 +144,7 @@ Container buildUploadedNewsThumbnailWidget(String? image, double width) {
           image!,
         ),
         width: width * 3 / 10 - 20,
+        height: 50,
       ),
     ),
   );

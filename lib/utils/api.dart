@@ -33,7 +33,7 @@ class API {
 
   static var GET_CATEGORIES = "$BASE_URL/getCategories";
 
-  static final VIDEO_URL =
+  static final S3_UPLOAD_URL =
       "https://newsvideosupload.s3.ap-south-1.amazonaws.com/";
 
   Uri upload_video_uri = Uri.parse(UPLOAD_VIDEO_URL);
@@ -101,34 +101,6 @@ class API {
     }
   }
 
-  // Future uploadVideoPostRequest(file) async {
-  //   try {
-  //     http.Response response = await http.get(upload_video_uri);
-  //     print('\n\n ${jsonDecode(response.body)} \n\n');
-  //     var urlResponse = jsonDecode(response.body);
-  //     var bytes = _readFileByte(file);
-  //
-  //     print(
-  //       '\n SignUpUserPostRequest Success >>>> :: $bytes \n ${bytes.runtimeType} \n',
-  //     );
-  //     print(urlResponse);
-  //     print('\n urlResponse: ${urlResponse["uploadURL"]}');
-  //     print(
-  //       '\n urlResponse type: ${urlResponse["uploadURL"].runtimeType} \n',
-  //     );
-  //
-  //     Uri upload_video_response_uri = Uri.parse(urlResponse["uploadURL"]);
-  //     http.Response response2 = await http.put(
-  //       upload_video_response_uri,
-  //       body: await _readFileByte(file),
-  //     );
-  //     print('\n Response2 Success >>>> :: ${jsonDecode(response2.body)} \n');
-  //   } catch (e) {
-  //     print('\n\n \n\n Response2 Failed >>>> ::');
-  //     print(e);
-  //   }
-  // }
-
   Future<Map?> fetchUploadUrl() async {
     try {
       // Fetching UploadUrl
@@ -137,13 +109,10 @@ class API {
 
       // Upload Url Response
       var urlResponse = jsonDecode(response.body);
-      print('\n urlResponse: ${urlResponse["uploadURL"]}');
+      print('\n urlResponse: ${urlResponse["video_url"]}');
 
       // Returning Url
-      return {
-        'uploadURL': urlResponse["uploadURL"],
-        'filename': urlResponse["filename"]
-      };
+      return urlResponse;
     } catch (e) {
       print('\n\n \n\n fetchUploadUrl Failed >>>> ::');
       print(e);
@@ -177,27 +146,57 @@ class API {
     }
   }
 
-  Future<NewsStoryObject?> createNewsStory(
-      String title, String desc, String uploadURL, int userId) async {
-    //TODO Ankit will continue
+  Future<bool> uploadImage(String urlResponse, File file) async {
+    try {
+      // Converting file to Unit8List byte data
+      var bytes = _readFileByte(file);
+      print('\n Bytes Data ::> $bytes $urlResponse \n');
 
+      // Upload video url parse
+      Uri upload_image_response_uri = Uri.parse(urlResponse);
+
+      // Uploading video to server
+      http.Response response = await http.put(
+        upload_image_response_uri,
+        body: await bytes,
+      );
+
+      print('\n uploadImage Success >>>> :: ${response.statusCode} \n');
+
+      // Returning Response
+      return (response.statusCode == 200);
+    } catch (e) {
+      print('\n\n \n\n uploadImage Failed >>>> ::');
+      print(e);
+      return false;
+    }
+  }
+
+  Future<NewsStoryObject?> createNewsStory(
+    String title,
+    String desc,
+    String uploadURL,
+    String imageuploadURL,
+    int userId,
+  ) async {
     var bodyobj = {
       "title": title,
       "desc": desc,
       "video_link": uploadURL,
+      "thum_link": imageuploadURL,
       "user_id": userId,
     };
     try {
-      http.Response response =
-          await sendPostRequest(CREATE_NEWS_STORY_URL, bodyobj);
-      // http.Response response = await http.post(create_news_story_uri);
+      http.Response response = await sendPostRequest(
+        CREATE_NEWS_STORY_URL,
+        bodyobj,
+      );
       print('\n\n ${jsonDecode(response.body)} \n\n');
       return NewsStoryObject.fromJson(jsonDecode(response.body));
     } catch (e) {
       print('\n\n Error: $e \n\n');
       return null;
     }
-    // return null;
   }
 
   Future<Map<String, dynamic>> getNewsStory() async {

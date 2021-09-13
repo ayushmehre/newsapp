@@ -1,6 +1,7 @@
 // user_uploaded_videos_widget
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/utils/colors.dart';
 
@@ -75,7 +76,7 @@ Container listComponent({
         // Uploaded News Thumbnail
         buildUploadedNewsThumbnailWidget(image, width),
         Container(
-          width: width * 7 / 10 - 20,
+          width: width * 7 / 10 - 48,
           padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -101,9 +102,36 @@ Container listComponent({
               ),
             ],
           ),
-        )
+        ),
+        // InkWell(
+        //   onTap: () {},
+        //   child: Container(
+        //     child: Icon(Icons.more_vert, size: 20),
+        //   ),
+        // ),
+        buildSideMenuButton(),
       ],
     ),
+  );
+}
+
+PopupMenuButton<dynamic> buildSideMenuButton() {
+  return PopupMenuButton(
+    icon: Icon(Icons.more_vert),
+    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+      const PopupMenuItem(
+        child: ListTile(
+          // leading: Icon(Icons.add),
+          title: Text('Play'),
+        ),
+      ),
+      const PopupMenuItem(
+        child: ListTile(
+          // leading: Icon(Icons.anchor),
+          title: Text('Edit'),
+        ),
+      ),
+    ],
   );
 }
 
@@ -126,6 +154,7 @@ Container buildUploadedNewsTitleWidget(String? title) {
   return Container(
     child: Text(
       title!,
+      maxLines: 2,
       style: TextStyle(
         fontSize: 12,
         color: CustomColors().black,

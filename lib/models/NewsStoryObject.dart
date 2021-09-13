@@ -22,6 +22,7 @@ class NewsStoryObject {
   int? storyId;
   int? authorId;
   String? videoLink;
+  String? thumLink;
   String? createdAt;
   String? title;
   String? descption;
@@ -37,6 +38,7 @@ class NewsStoryObject {
     this.storyId,
     this.authorId,
     this.videoLink,
+    this.thumLink,
     this.createdAt,
     this.title,
     this.descption,
@@ -52,12 +54,14 @@ class NewsStoryObject {
     storyId = int.tryParse(json["story_id"]?.toString() ?? '');
     authorId = int.tryParse(json["author_id"]?.toString() ?? '');
     videoLink = json["video_link"]?.toString();
+    thumLink = json["thum_link"]?.toString();
     createdAt = json["created_at"]?.toString();
     title = json["title"]?.toString();
     descption = json["descption"]?.toString();
     viewCount = int.tryParse(json["view_count"]?.toString() ?? '');
     totalWatchTime = int.tryParse(json["total_watch_time"]?.toString() ?? '');
-    avgUserWatchTime = int.tryParse(json["avg_user_watch_time"]?.toString() ?? '');
+    avgUserWatchTime =
+        int.tryParse(json["avg_user_watch_time"]?.toString() ?? '');
     likesCount = int.tryParse(json["likes_count"]?.toString() ?? '');
     shareCount = int.tryParse(json["share_count"]?.toString() ?? '');
     commentsCount = int.tryParse(json["comments_count"]?.toString() ?? '');
@@ -67,6 +71,7 @@ class NewsStoryObject {
     data["story_id"] = storyId;
     data["author_id"] = authorId;
     data["video_link"] = videoLink;
+    data["thum_link"] = thumLink;
     data["created_at"] = createdAt;
     data["title"] = title;
     data["descption"] = descption;
@@ -78,5 +83,6 @@ class NewsStoryObject {
     data["comments_count"] = commentsCount;
     return data;
   }
+
   Map<String, dynamic> origJson() => __origJson;
 }

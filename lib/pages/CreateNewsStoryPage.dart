@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flick_video_player/flick_video_player.dart';
@@ -9,6 +8,7 @@ import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/utils/UserUtils.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/utils/utils.dart';
 import 'package:newsapp/widgets/widgets.dart';
 import 'package:video_player/video_player.dart';
 
@@ -393,33 +393,58 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
 
       //Starting to upload
       var response = await API().fetchUploadUrl();
+      print(response);
       if (response != null) {
-        var uploadURL = response['uploadURL'];
-        var filename = response['filename'];
+        var video_url = response['video_url'];
+        var video_name = response['video_name'];
+        var image_url = response['image_url'];
+        var image_name = response['image_name'];
+
         var videoUploadSuccess = await API().uploadVideo(
-          uploadURL,
+          video_url,
           widget.file,
         );
+        var getvideourl = API.S3_UPLOAD_URL + video_name;
+        var getimageurl = API.S3_UPLOAD_URL + image_name;
         if (videoUploadSuccess) {
           try {
-            var currentUser = await UserUtils.getCurrentUser();
-            print("\n\n currentUsercurrentUser: ${currentUser.userId}");
-            NewsStoryObject? newsStoryObject = await API().createNewsStory(
-              videoName.text.toString(),
-              videoDesc.text.toString(),
-              API.VIDEO_URL+filename,
-              currentUser.userId ?? 0,
+            // Getting Image Thumbnail
+            File imageFileData = await getVideoThumbnail(getvideourl);
+
+            // Uploading Image
+            var imageUploadSuccess = await API().uploadImage(
+              image_url,
+              imageFileData,
             );
-            setState(() {
-              isLoading = false;
-            });
-            if (newsStoryObject != null) {
-              showErrorDialog(
-                context,
-                "Success",
-                "Your video is uploaded successfully",
+
+            if (imageUploadSuccess) {
+              // Getting Current User
+              var currentUser = await UserUtils.getCurrentUser();
+              print("\n\n currentUsercurrentUser: ${currentUser.userId}");
+
+              // Creating News Story
+              NewsStoryObject? newsStoryObject = await API().createNewsStory(
+                videoName.text.toString(),
+                videoDesc.text.toString(),
+                getvideourl,
+                getimageurl,
+                currentUser.userId ?? 0,
               );
-              Navigator.pop(context);
+              setState(() {
+                isLoading = false;
+              });
+              if (newsStoryObject != null) {
+                showErrorDialog(
+                  context,
+                  "Success",
+                  "Your video is uploaded successfully",
+                );
+                Navigator.pop(context);
+              }
+            } else {
+              setState(() {
+                isLoading = false;
+              });
             }
           } catch (e) {
             print('\n\n \n\n currentUser Failed >>>> ::');
@@ -428,7 +453,10 @@ class _CreateNewsStoryPageState extends State<CreateNewsStoryPage> {
               isLoading = false;
             });
           }
-
+        } else {
+          setState(() {
+            isLoading = false;
+          });
         }
       }
     }

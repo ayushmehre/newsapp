@@ -6,11 +6,9 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newsapp/dummy/NavbarScrollHide.dart';
 import 'package:newsapp/models/UserObject.dart';
-import 'package:newsapp/utils/UserUtils.dart';
-import 'package:newsapp/widgets/open_web_view.dart';
 import 'package:newsapp/pages/LoginPage.dart';
-import 'package:newsapp/pages/SettingsScreen.dart';
 import 'package:newsapp/pages/UserMyVideosFeed.dart';
+import 'package:newsapp/utils/UserUtils.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:newsapp/widgets/open_web_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,13 +25,13 @@ class _UserAccountState extends State<UserAccount> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   UserObject? currentUser;
 
-
   @override
   void initState() {
     super.initState();
     getCurrentUserDetails();
   }
-  getCurrentUserDetails()async{
+
+  getCurrentUserDetails() async {
     setState(() async {
       currentUser = await UserUtils.getCurrentUser();
     });
@@ -77,12 +75,11 @@ class _UserAccountState extends State<UserAccount> {
           children: [
             SizedBox(height: 20),
             buildUserDetails(),
-
-            buildCards(context, 'My Uploaded Videos', () {
+            buildCards(context, 'My Videos', () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => OpenWebView("https://play.google.com/store/apps/details?id=com.flutter.homeguruji_2021_6","Rate App"),
+                  builder: (context) => UserMyVideosFeed(),
                 ),
               );
             }),
@@ -91,14 +88,6 @@ class _UserAccountState extends State<UserAccount> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => NavbarScrollHide(),
-                ),
-              );
-            }),
-            buildCards(context, 'My Videos', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UserMyVideosFeed(),
                 ),
               );
             }),
@@ -128,7 +117,6 @@ class _UserAccountState extends State<UserAccount> {
                 ),
               );
             }),
-
             buildCards(context, 'Logout', () {
               showDialog(
                 context: context,

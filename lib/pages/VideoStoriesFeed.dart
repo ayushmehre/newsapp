@@ -69,7 +69,7 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
   ) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final title = newsStoryData.title;
+    final title = newsStoryData.videoLink;
     print('\n\n \n\n widget.newsStoryObjectList:> $title \n\n \n\n');
     return Column(
       children: [
@@ -85,12 +85,15 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
               //     fontSize: 40,
               //   ),
               // ),
-              StoryItem.pageImage(
-                url:
-                    "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
-                caption: title,
+              StoryItem.pageVideo(
+                newsStoryData.videoLink.toString(),
                 controller: storyController,
               ),
+              // StoryItem.pageImage(
+              //   url: newsStoryData.videoLink.toString(),
+              //   caption: title,
+              //   controller: storyController,
+              // ),
             ],
             onStoryShow: (s) {
               print("Showing a story ${s}");

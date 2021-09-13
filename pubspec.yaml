@@ -43,6 +43,8 @@ dependencies:
   material_floating_search_bar: ^0.3.4
   flutter_share: ^2.0.0
   webview_flutter: ^2.0.13
+  video_thumbnail: ^0.4.3
+  path_provider: ^2.0.3
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 

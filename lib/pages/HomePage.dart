@@ -106,6 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: CustomColors().white,
       appBar: AppBar(
@@ -115,30 +117,30 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Container(
-            //   margin: EdgeInsets.fromLTRB(16, 20, 0, 16),
-            //   child: buildTitle(),
-            // ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 20, 0, 16),
+              child: buildTitle(),
+            ),
             boolfeedsload
-                ? Container(
-                    child: feedList.length == 0
-                        ? Container(
-                            child: Center(child: Text("Error")),
-                          )
-                        : Container(
-                            height: MediaQuery.of(context).size.height - 100,
-                            child: NewsListWidget(feedList,
-                                showNumber: true,
-                                scrollPhysics: NeverScrollableScrollPhysics(),
-                                title: buildTitle()),
-                          ),
-                  )
+                ? feedList.length == 0
+                    ? Container(
+                        height: height / 1.4,
+                        child: Center(child: Text("No Stories Found")),
+                      )
+                    : Container(
+                        height: height + 100,
+                        child: NewsListWidget(
+                          feedList,
+                          showNumber: true,
+                          scrollPhysics: NeverScrollableScrollPhysics(),
+                          title: buildTitle(),
+                        ),
+                      )
                 : Container(
-                    height: MediaQuery.of(context).size.height / 1.4,
+                    height: MediaQuery.of(context).size.height / 1.5,
                     child: customProgressIndicator(),
-                  )
+                  ),
           ],
         ),
       ),

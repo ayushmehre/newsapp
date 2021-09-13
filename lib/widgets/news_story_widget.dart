@@ -143,13 +143,19 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
   }
 
   Container buildImage() {
+    print(widget.newsStoryObject.thumLink);
+    var image2 = widget.newsStoryObject.thumLink != null
+        ? widget.newsStoryObject.thumLink.toString()
+        : image;
     return Container(
       padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: Image(
-          image: NetworkImage(image),
+          image: NetworkImage(image2.toString()),
           width: double.infinity,
+          height: 250,
+          fit: BoxFit.fitWidth,
         ),
       ),
     );

@@ -74,6 +74,8 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
         Container(
           height: height - 50,
           child: StoryView(
+            inline: false,
+            // onVerticalSwipeComplete: Function(Direction?)? {},
             storyItems: [
               // StoryItem.text(
               //   title: "${newsStoryData.videoLink}",
@@ -153,8 +155,12 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
                     builder: (context) {
                       return Container(
                         height: 400,
-                        child: Center(
-                          child: Text('Comments'),
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text('Comments'),
+                            ),
+                          ],
                         ),
                       );
                     },

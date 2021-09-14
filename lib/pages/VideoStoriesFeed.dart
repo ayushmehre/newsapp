@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/comments/comments_widget.dart';
+import 'package:newsapp/widgets/custom_input.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/story_view.dart';
 
@@ -23,9 +25,12 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
 
   int currentPage = 0;
 
+  late TextEditingController comment;
+
   @override
   void initState() {
     // TODO: implement initState
+    comment = TextEditingController();
     setState(() {
       likes = 0;
       isLiked = false;
@@ -43,6 +48,7 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: PageView.builder(
         pageSnapping: true,
         itemCount: widget.newsStoryObjectList.length,
@@ -161,18 +167,50 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
                 onTap: () {
                   storyController.pause();
                   showModalBottomSheet(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(25.0),
+                      ),
+                    ),
                     context: context,
+                    isScrollControlled: true,
                     builder: (context) {
                       return Container(
-                        height: 400,
-                        child: Column(
-                          children: [
-                            Center(
-                              child: Text('Comments'),
-                            ),
-                          ],
+                        height: 500,
+                        child: Scaffold(
+                          appBar: buildCommentAppBar(),
+                          backgroundColor: CustomColors().white,
+                          body: commentBodyWidget(),
                         ),
                       );
+
+                      //   SingleChildScrollView(
+                      //   physics: AlwaysScrollableScrollPhysics(),
+                      //   child: Container(
+                      //     width: width,
+                      //     child: Column(
+                      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //       mainAxisSize: MainAxisSize.min,
+                      //       children: [
+                      //         buildCommentAppBar(),
+                      //         Container(
+                      //           height: 450,
+                      //           padding: EdgeInsets.fromLTRB(16, 20, 16, 20),
+                      //           child: Column(
+                      //             mainAxisAlignment:
+                      //                 MainAxisAlignment.spaceBetween,
+                      //             children: [
+                      //               Container(
+                      //                 child: Text("Comment Body"),
+                      //               ),
+                      //               buildCommentInputField(),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // );
                     },
                   );
                 },
@@ -216,6 +254,40 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
           ),
         )
       ],
+    );
+  }
+
+  AppBar buildCommentAppBar() {
+    return AppBar(
+      title: Text(
+        "Comments",
+        style: TextStyle(
+          fontSize: 18,
+          color: CustomColors().black,
+        ),
+      ),
+      elevation: 2,
+      backgroundColor: CustomColors().white,
+      iconTheme: IconThemeData(
+        color: CustomColors().black,
+      ),
+    );
+  }
+
+  CustomInput buildCommentInputField() {
+    return CustomInput(
+      keyboardType: TextInputType.emailAddress,
+      obscureText: false,
+      hintText: 'Enter your comment',
+      controller: comment,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return "Email can\'t be empty";
+        } else {
+          return null;
+        }
+      },
+      textInputAction: TextInputAction.next,
     );
   }
 }

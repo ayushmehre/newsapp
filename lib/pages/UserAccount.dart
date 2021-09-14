@@ -83,7 +83,8 @@ class _MoreTabWidgetState extends State<MoreTabWidget> {
           children: [
             SizedBox(height: 20),
             buildUserDetails(),
-            isCreator ? buildMyVideosCard(context) : SizedBox(),
+            // isCreator
+            true ? buildMyVideosCard(context) : SizedBox(),
             buildCards(context, "Settings", () {
               Navigator.push(
                 context,

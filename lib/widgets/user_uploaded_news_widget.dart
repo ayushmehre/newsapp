@@ -30,7 +30,7 @@ class _UserUploadedVideosWidgetState extends State<UserUploadedVideosWidget> {
           views: widget.feedList[index].viewCount.toString(),
           shares: widget.feedList[index].shareCount.toString(),
           index: index,
-          image:widget.feedList[index].thumLink,
+          image: widget.feedList[index].thumLink,
         );
       },
     );
@@ -135,14 +135,15 @@ PopupMenuButton<dynamic> buildSideMenuButton() {
 }
 
 Container buildUploadedNewsThumbnailWidget(String? image, double width) {
+  String customimage =
+      "https://images.unsplash.com/photo-1628191080740-dad84f3c993c?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80";
+  var image2 = image != null ? image.toString() : customimage;
   return Container(
     padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
     child: ClipRRect(
       borderRadius: BorderRadius.circular(4),
       child: Image(
-        image: NetworkImage(
-          image!,
-        ),
+        image: NetworkImage(image2),
         width: width * 3 / 10 - 20,
         height: 50,
       ),

@@ -75,7 +75,6 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
           height: height - 50,
           child: StoryView(
             inline: false,
-            // onVerticalSwipeComplete: Function(Direction?)? {},
             storyItems: [
               // StoryItem.text(
               //   title: "${newsStoryData.videoLink}",

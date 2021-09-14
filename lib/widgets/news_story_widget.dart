@@ -74,11 +74,12 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
                     width: 34,
                     child: Text(
                       (widget.index + 1).toString(),
-                      style: TextStyle(
-                        fontSize: 65,
+                      style: GoogleFonts.roboto(
+                          textStyle: TextStyle(
+                        fontSize: 70,
                         color: CustomColors().black,
                         fontWeight: FontWeight.w900,
-                      ),
+                      )),
                     ),
                   ),
                 ),
@@ -114,7 +115,7 @@ class _NewsStoryItemWidgetState extends State<NewsStoryItemWidget> {
     return Text(
       widget.newsStoryObject.descption.toString(),
       maxLines: 2,
-      style: GoogleFonts.abel(
+      style: GoogleFonts.roboto(
         textStyle: TextStyle(
           fontSize: 16,
           color: CustomColors().black,

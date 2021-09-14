@@ -7,24 +7,30 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/story_view.dart';
 
 class VideoStoriesFeed extends StatefulWidget {
-  List<NewsStoryObject> newsStoryObjectList;
+  final List<NewsStoryObject> newsStoryObjectList;
 
   VideoStoriesFeed({required this.newsStoryObjectList});
+
   @override
   _VideoStoriesFeedState createState() => _VideoStoriesFeedState();
 }
 
 class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
-  PageController _controller = PageController(initialPage: 0);
+  PageController _controller = PageController(initialPage: 0, keepPage: false);
   final storyController = StoryController();
   int likes = 0;
   bool isLiked = false;
 
+  int currentPage = 0;
+
   @override
   void initState() {
     // TODO: implement initState
-    likes = 0;
-    isLiked = false;
+    setState(() {
+      likes = 0;
+      isLiked = false;
+      currentPage = 0;
+    });
     super.initState();
   }
 
@@ -36,10 +42,9 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: PageView.builder(
+        pageSnapping: true,
         itemCount: widget.newsStoryObjectList.length,
         scrollDirection: Axis.vertical,
         onPageChanged: (index) {
@@ -99,6 +104,12 @@ class _VideoStoriesFeedState extends State<VideoStoriesFeed> {
             },
             onComplete: () {
               print("Completed a cycle");
+              setState(() {
+                setState(() {
+                  currentPage = currentPage + 1;
+                });
+                _controller.jumpToPage(currentPage);
+              });
             },
             progressPosition: ProgressPosition.top,
             repeat: false,

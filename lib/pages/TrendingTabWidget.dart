@@ -7,20 +7,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/pages/CreateNewsStoryPage.dart';
+import 'package:newsapp/utils/UserUtils.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/ShimmerListView.dart';
 import 'package:newsapp/widgets/news_list_widget.dart';
 import 'package:newsapp/widgets/widgets.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class TrendingTabWidget extends StatefulWidget {
+  const TrendingTabWidget({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _TrendingTabWidgetState createState() => _TrendingTabWidgetState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _TrendingTabWidgetState extends State<TrendingTabWidget> {
   late VideoPlayerController _controller;
   final videoInfo = FlutterVideoInfo();
   late File _file;
@@ -28,15 +31,34 @@ class _HomeScreenState extends State<HomeScreen> {
   late bool boolfeedsload = false;
   late List<NewsStoryObject> feedList = [];
 
+  bool errorOccurred = false;
+
+  bool isCreator = false;
+
   @override
   void initState() {
     super.initState();
-    getHomePageStoriesFeeds();
+
+    checkForCreator();
+
+    try {
+      getHomePageStoriesFeeds();
+    } catch (e) {
+      setState(() {
+        errorOccurred = true;
+      });
+    }
+  }
+
+  void checkForCreator() async {
+    setState(() async {
+      isCreator = (await UserUtils.getCurrentUser()).iscreator ?? false;
+    });
   }
 
   getHomePageStoriesFeeds() async {
     Map<String, dynamic> response = await API().getNewsStory();
-    if (!response.isEmpty) {
+    if (response.isNotEmpty) {
       if (response["success"]) {
         List<NewsStoryObject> tmpList = [];
         for (var dctData in response["data"]) {
@@ -110,50 +132,75 @@ class _HomeScreenState extends State<HomeScreen> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: CustomColors().white,
-      appBar: AppBar(
-        toolbarHeight: 4,
-        backgroundColor: CustomColors().white,
-        elevation: 0,
+      appBar: buildAppBar(),
+      body: errorOccurred
+          ? Center(
+              child: Text("Something went wrong"),
+            )
+          : buildSingleChildScrollView(height, context),
+      floatingActionButton: isCreator ? buildFloatingActionButton() : null,
+    );
+  }
+
+  FloatingActionButton buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        getImage();
+      },
+      backgroundColor: CustomColors().red,
+      child: Icon(
+        Icons.add,
+        size: 40,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 20, 0, 16),
-              child: buildTitle(),
-            ),
-            boolfeedsload
-                ? feedList.length == 0
-                    ? Container(
-                        height: height / 1.4,
-                        child: Center(child: Text("No Stories Found")),
-                      )
-                    : Container(
-                        height: height + 100,
-                        child: NewsListWidget(
-                          feedList,
-                          showNumber: true,
-                          scrollPhysics: NeverScrollableScrollPhysics(),
-                          title: buildTitle(),
-                        ),
-                      )
-                : Container(
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    child: customProgressIndicator(),
-                  ),
-          ],
-        ),
+    );
+  }
+
+  SingleChildScrollView buildSingleChildScrollView(
+      double height, BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 20, 0, 16),
+            child: buildTitle(),
+          ),
+          boolfeedsload
+              ? container(height)
+              : Shimmer.fromColors(
+                  baseColor: Colors.grey.withOpacity(0.3),
+                  highlightColor: Colors.grey.withOpacity(0.1),
+                  enabled: true,
+                  child: ShimmerListView()),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          getImage();
-        },
-        backgroundColor: CustomColors().red,
-        child: Icon(
-          Icons.add,
-          size: 40,
-        ),
-      ),
+    );
+  }
+
+  Widget container(double height) {
+    return feedList.length == 0
+        ? Container(
+            height: height / 1.4,
+            child: Center(child: Text("No Stories Found")),
+          )
+        : newsListWidget();
+  }
+
+  NewsListWidget newsListWidget() {
+    return NewsListWidget(
+      feedList,
+      showNumber: true,
+      scrollPhysics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      toolbarHeight: 4,
+      backgroundColor: CustomColors().white,
+      elevation: 0,
     );
   }
 

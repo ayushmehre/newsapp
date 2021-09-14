@@ -1,20 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/ShimmerListView.dart';
 import 'package:newsapp/widgets/news_list_widget.dart';
 import 'package:newsapp/widgets/widgets.dart';
+import 'package:shimmer/shimmer.dart';
 
-class UserFeeds extends StatefulWidget {
-  const UserFeeds({Key? key}) : super(key: key);
+class CategoryNewListScreen extends StatefulWidget {
+  final String categoryName;
+
+  const CategoryNewListScreen({Key? key, required this.categoryName})
+      : super(key: key);
 
   @override
-  _UserFeedsState createState() => _UserFeedsState();
+  _CategoryNewListScreenState createState() => _CategoryNewListScreenState();
 }
 
-class _UserFeedsState extends State<UserFeeds> {
+class _CategoryNewListScreenState extends State<CategoryNewListScreen> {
   late bool boolfeedsload = false;
   late List<NewsStoryObject> feedList = [];
 
@@ -63,18 +69,34 @@ class _UserFeedsState extends State<UserFeeds> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(16, 20, 0, 16),
-              child: Text(
-                'For You',
-                style: GoogleFonts.roboto(
-                  textStyle: TextStyle(
-                    fontSize: 44,
-                    color: CustomColors().black,
-                    fontWeight: FontWeight.w700,
+            Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    child: Icon(FontAwesomeIcons.chevronLeft, size: 30),
                   ),
                 ),
-              ),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.fromLTRB(16, 20, 0, 16),
+                    child: Text(
+                      widget.categoryName,
+                      style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                          fontSize: 44,
+                          color: CustomColors().black,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             boolfeedsload
                 ? Container(
@@ -90,10 +112,11 @@ class _UserFeedsState extends State<UserFeeds> {
                             ),
                           ),
                   )
-                : Container(
-                    height: MediaQuery.of(context).size.height / 1.4,
-                    child: customProgressIndicator(),
-                  )
+                : Shimmer.fromColors(
+                    baseColor: Colors.grey.withOpacity(0.3),
+                    highlightColor: Colors.grey.withOpacity(0.1),
+                    enabled: true,
+                    child: ShimmerListView())
             // for (var i = 0; i < 10; i++)
             //   listComponent(
             //     index: (i + 1).toString(),

@@ -7,28 +7,36 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:newsapp/dummy/NavbarScrollHide.dart';
 import 'package:newsapp/models/UserObject.dart';
 import 'package:newsapp/pages/LoginPage.dart';
-import 'package:newsapp/pages/UserMyVideosFeed.dart';
+import 'package:newsapp/pages/MyVideosPage.dart';
 import 'package:newsapp/utils/UserUtils.dart';
 import 'package:newsapp/utils/colors.dart';
 import 'package:newsapp/widgets/open_web_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
-class UserAccount extends StatefulWidget {
-  const UserAccount({Key? key}) : super(key: key);
+class MoreTabWidget extends StatefulWidget {
+  const MoreTabWidget({Key? key}) : super(key: key);
 
   @override
-  _UserAccountState createState() => _UserAccountState();
+  _MoreTabWidgetState createState() => _MoreTabWidgetState();
 }
 
-class _UserAccountState extends State<UserAccount> {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+class _MoreTabWidgetState extends State<MoreTabWidget> {
   UserObject? currentUser;
+
+  bool isCreator = false;
 
   @override
   void initState() {
     super.initState();
-    getCurrentUserDetails();
+    initAsync();
+  }
+
+  Future<void> initAsync() async {
+    await getCurrentUserDetails();
+    setState(() {
+      isCreator = currentUser?.iscreator ?? false;
+    });
   }
 
   getCurrentUserDetails() async {
@@ -75,14 +83,7 @@ class _UserAccountState extends State<UserAccount> {
           children: [
             SizedBox(height: 20),
             buildUserDetails(),
-            buildCards(context, 'My Videos', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UserMyVideosFeed(currentUser),
-                ),
-              );
-            }),
+            isCreator ? buildMyVideosCard(context) : SizedBox(),
             buildCards(context, "Settings", () {
               Navigator.push(
                 context,
@@ -129,6 +130,17 @@ class _UserAccountState extends State<UserAccount> {
         ),
       ),
     );
+  }
+
+  Column buildMyVideosCard(BuildContext context) {
+    return buildCards(context, 'My Videos', () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyVideosPage(currentUser),
+        ),
+      );
+    });
   }
 
   Column buildCards(BuildContext context, String title, Function callback) {

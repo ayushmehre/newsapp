@@ -1,23 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newsapp/models/NewsStoryObject.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/ShimmerListView.dart';
 import 'package:newsapp/widgets/news_list_widget.dart';
 import 'package:newsapp/widgets/widgets.dart';
+import 'package:shimmer/shimmer.dart';
 
-class CategoryFeedScreen extends StatefulWidget {
-  final String categoryName;
-  const CategoryFeedScreen({Key? key, required this.categoryName})
-      : super(key: key);
+class ForYouTabWidget extends StatefulWidget {
+  const ForYouTabWidget({Key? key}) : super(key: key);
 
   @override
-  _CategoryFeedScreenState createState() => _CategoryFeedScreenState();
+  _ForYouTabWidgetState createState() => _ForYouTabWidgetState();
 }
 
-class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
+class _ForYouTabWidgetState extends State<ForYouTabWidget> {
   late bool boolfeedsload = false;
   late List<NewsStoryObject> feedList = [];
 
@@ -66,32 +65,18 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(16),
-                    child: Icon(FontAwesomeIcons.chevronLeft, size: 30),
+            Container(
+              margin: EdgeInsets.fromLTRB(16, 20, 0, 16),
+              child: Text(
+                'For You',
+                style: GoogleFonts.roboto(
+                  textStyle: TextStyle(
+                    fontSize: 44,
+                    color: CustomColors().black,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.fromLTRB(16, 20, 0, 16),
-                  child: Text(
-                    widget.categoryName,
-                    style: GoogleFonts.roboto(
-                      textStyle: TextStyle(
-                        fontSize: 44,
-                        color: CustomColors().black,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
             boolfeedsload
                 ? Container(
@@ -99,18 +84,18 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
                         ? Container(
                             child: Center(child: Text("Error")),
                           )
-                        : Container(
-                            height: MediaQuery.of(context).size.height - 180,
-                            child: NewsListWidget(
-                              feedList,
-                              showNumber: false,
-                            ),
+                        : NewsListWidget(
+                            feedList,
+                            shrinkWrap: true,
+                            scrollPhysics: NeverScrollableScrollPhysics(),
+                            showNumber: false,
                           ),
                   )
-                : Container(
-                    height: MediaQuery.of(context).size.height / 1.4,
-                    child: customProgressIndicator(),
-                  )
+                : Shimmer.fromColors(
+                    baseColor: Colors.grey.withOpacity(0.3),
+                    highlightColor: Colors.grey.withOpacity(0.1),
+                    enabled: true,
+                    child: ShimmerListView())
             // for (var i = 0; i < 10; i++)
             //   listComponent(
             //     index: (i + 1).toString(),

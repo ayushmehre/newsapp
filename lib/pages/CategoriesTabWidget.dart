@@ -2,19 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:newsapp/pages/CategoryFeedScreen.dart';
+import 'package:newsapp/pages/CategoryNewListScreen.dart';
 import 'package:newsapp/utils/api.dart';
 import 'package:newsapp/utils/colors.dart';
+import 'package:newsapp/widgets/ShimmerListView.dart';
 import 'package:newsapp/widgets/widgets.dart';
+import 'package:shimmer/shimmer.dart';
 
-class ExploreScreen extends StatefulWidget {
-  const ExploreScreen({Key? key}) : super(key: key);
+class CategoriesTabWidget extends StatefulWidget {
+  const CategoriesTabWidget({Key? key}) : super(key: key);
 
   @override
-  _ExploreScreenState createState() => _ExploreScreenState();
+  _CategoriesTabWidgetState createState() => _CategoriesTabWidgetState();
 }
 
-class _ExploreScreenState extends State<ExploreScreen> {
+class _CategoriesTabWidgetState extends State<CategoriesTabWidget> {
   List listData = [];
   bool boolsearch_height = false;
   bool isloading = false;
@@ -85,10 +87,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ),
                   ),
                   isloading
-                      ? Container(
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: customProgressIndicator(),
-                        )
+                      ? Shimmer.fromColors(
+                          baseColor: Colors.grey.withOpacity(0.3),
+                          highlightColor: Colors.grey.withOpacity(0.1),
+                          enabled: true,
+                          child: ShimmerCategoryGrid())
                       : buildCategory(width, context, listData),
                   SizedBox(height: 80),
                 ],
@@ -101,59 +104,73 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Widget buildSearchBar(isPortrait) {
-    return FloatingSearchBar(
-        hint: 'Search...',
-        elevation: 0,
-        backgroundColor: Colors.grey[100],
-        scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
-        transitionDuration: const Duration(milliseconds: 800),
-        transitionCurve: Curves.easeInOut,
-        physics: const BouncingScrollPhysics(),
-        axisAlignment: isPortrait ? 0.0 : -1.0,
-        openAxisAlignment: 0.0,
-        width: MediaQuery.of(context).size.width,
-        debounceDelay: const Duration(milliseconds: 500),
-        onQueryChanged: (query) {
-          // Call your model, bloc, controller here.
-          // setState(() {
-          //   boolsearch_height=true;
-          // });
-        },
-        // Specify a custom transition to be used for
-        // animating between opened and closed stated.
-        transition: CircularFloatingSearchBarTransition(),
-        actions: [
-          FloatingSearchBarAction(
-            showIfOpened: false,
-            child: CircularButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                setState(() {
-                  boolsearch_height = false;
-                });
-              },
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CategoryNewListScreen(
+              categoryName: "Search",
             ),
           ),
-          FloatingSearchBarAction.searchToClear(
-            showIfClosed: false,
-          ),
-        ],
-        backdropColor: CustomColors().white,
-        builder: (context, transition) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Material(
-              color: Colors.white,
-              elevation: 4.0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: Colors.accents.map((color) {
-                  return Container(height: 112, color: color);
-                }).toList(),
+        );
+      },
+      child: IgnorePointer(
+        child: FloatingSearchBar(
+            hint: 'Search...',
+            elevation: 0,
+            backgroundColor: Colors.grey[100],
+            scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+            transitionDuration: const Duration(milliseconds: 800),
+            transitionCurve: Curves.easeInOut,
+            physics: const BouncingScrollPhysics(),
+            axisAlignment: isPortrait ? 0.0 : -1.0,
+            openAxisAlignment: 0.0,
+            width: MediaQuery.of(context).size.width,
+            debounceDelay: const Duration(milliseconds: 500),
+            onQueryChanged: (query) {
+              // Call your model, bloc, controller here.
+              // setState(() {
+              //   boolsearch_height=true;
+              // });
+            },
+            // Specify a custom transition to be used for
+            // animating between opened and closed stated.
+            transition: CircularFloatingSearchBarTransition(),
+            actions: [
+              FloatingSearchBarAction(
+                showIfOpened: false,
+                child: CircularButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      boolsearch_height = false;
+                    });
+                  },
+                ),
               ),
-            ),
-          );
-        });
+              FloatingSearchBarAction.searchToClear(
+                showIfClosed: false,
+              ),
+            ],
+            backdropColor: CustomColors().white,
+            builder: (context, transition) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Material(
+                  color: Colors.white,
+                  elevation: 4.0,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: Colors.accents.map((color) {
+                      return Container(height: 112, color: color);
+                    }).toList(),
+                  ),
+                ),
+              );
+            }),
+      ),
+    );
   }
 
   GridView buildCategory(
@@ -184,7 +201,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CategoryFeedScreen(
+                builder: (context) => CategoryNewListScreen(
                   categoryName: data['tags_name'].toUpperCase(),
                 ),
               ),

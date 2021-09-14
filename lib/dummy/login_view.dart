@@ -3,7 +3,7 @@ import 'package:amplify_auth_cognito/method_channel_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newsapp/amplifyconfiguration.dart';
-import 'package:newsapp/pages/HomePage.dart';
+import 'package:newsapp/pages/TrendingTabWidget.dart';
 import 'package:newsapp/dummy/SignUp.dart';
 import 'package:newsapp/widgets/Brezier_container.dart';
 import 'package:amplify_core/amplify_core.dart';
@@ -85,7 +85,7 @@ class _LoginPage2State extends State<LoginPage2> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => TrendingTabWidget(),
           ),
         );
       }
